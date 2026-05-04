@@ -444,7 +444,6 @@ html:not(.dark) .top-nav-link[data-tooltip]:hover::before {
   }
 }
 
-/* Radix Tooltip (@radix-ui/react-tooltip): портал, не режется списками с overflow:hidden */
 .radix-tooltip-content {
   z-index: 1100;
   max-width: min(260px, calc(100vw - 24px));

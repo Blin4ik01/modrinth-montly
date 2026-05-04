@@ -271,7 +271,7 @@ export default function VersionPage({ project, version, author, contentType, plu
     <div className="max-w-7xl mx-auto">
       <ResourceHeader resource={project} contentType={contentType} versions={versions} />
       
-      <ContentNavigation slug={project.slug} contentType={singularName} versionsCount={versions.length || 0} galleryCount={galleryCount || 0} />
+      <ContentNavigation slug={project.slug} contentType={singularName} versionsCount={versions.length || 0} galleryCount={galleryCount || 0} projectColor={project.color} />
 
       <div className="bg-modrinth-dark border border-gray-800 rounded-lg p-4 mb-6">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">

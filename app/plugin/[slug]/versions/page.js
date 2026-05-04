@@ -79,7 +79,7 @@ export default async function PluginVersionsPage({ params, searchParams }) {
       <IconPreload iconUrl={plugin.icon_url} />
       <ResourceHeader resource={plugin} contentType="plugin" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="plugin" versionsCount={versions.length} galleryCount={plugin.gallery?.length || 0} />
+      <ContentNavigation slug={slug} contentType="plugin" versionsCount={versions.length} galleryCount={plugin.gallery?.length || 0} projectColor={plugin.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

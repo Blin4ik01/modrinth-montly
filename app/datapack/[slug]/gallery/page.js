@@ -107,7 +107,7 @@ export default async function DatapackGalleryPage({ params }) {
       <IconPreload iconUrl={pack.icon_url} />
       <ResourceHeader resource={pack} contentType="datapack" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="datapack" versionsCount={versions.length} galleryCount={gallery.length} />
+      <ContentNavigation slug={slug} contentType="datapack" versionsCount={versions.length} galleryCount={gallery.length} projectColor={pack.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

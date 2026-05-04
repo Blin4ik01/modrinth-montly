@@ -127,7 +127,7 @@ export default async function ModpackPage({ params }) {
     <div className="max-w-7xl mx-auto">
       <ResourceHeader resource={modpack} contentType="modpack" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="modpack" versionsCount={versions.length} galleryCount={modpack.gallery?.length || 0} />
+      <ContentNavigation slug={slug} contentType="modpack" versionsCount={versions.length} galleryCount={modpack.gallery?.length || 0} projectColor={modpack.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2">

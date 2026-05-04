@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getMod, getModVersions, getTeamMembers } from '@/lib/modrinth'
+import { getMod, getModVersions, getTeamMembers, formatDownloads } from '@/lib/modrinth'
 import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked } from '@/lib/contentFilter'
 import ResourceSidebar from '@/app/components/ResourceSidebar'
 import ContentNavigation from '@/app/components/ContentNavigation'
@@ -126,7 +126,7 @@ export default async function ResourcepackPage({ params }) {
     <div className="max-w-7xl mx-auto">
       <ResourceHeader resource={pack} contentType="resourcepack" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="resourcepack" versionsCount={versions.length} galleryCount={pack.gallery?.length || 0} />
+      <ContentNavigation slug={slug} contentType="resourcepack" versionsCount={versions.length} galleryCount={pack.gallery?.length || 0} projectColor={pack.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

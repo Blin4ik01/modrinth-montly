@@ -24,18 +24,22 @@ export default function ResourceList({ resources, type = 'mod' }) {
     }
   }, [searchParams])
 
+  const packGrid = type === 'resourcepack' || type === 'shader'
+  const listClass = packGrid ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : 'space-y-3'
+  const skeletonCount = packGrid ? 6 : 10
+
   if (showSkeleton) {
     return (
-      <div className="space-y-3">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <ResourceCardSkeleton key={index} />
+      <div className={listClass}>
+        {Array.from({ length: skeletonCount }).map((_, index) => (
+          <ResourceCardSkeleton key={index} variant={packGrid ? 'resourcepack' : 'default'} />
         ))}
       </div>
     )
   }
 
   return (
-    <div className="space-y-3">
+    <div className={listClass}>
       {resources.map((resource) => (
         <ResourceCard key={resource.project_id} resource={resource} type={type} />
       ))}

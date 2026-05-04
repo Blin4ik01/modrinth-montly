@@ -126,7 +126,7 @@ export default async function ShaderPage({ params }) {
     <div className="max-w-7xl mx-auto">
       <ResourceHeader resource={shader} contentType="shader" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="shader" versionsCount={versions.length} galleryCount={shader.gallery?.length || 0} />
+      <ContentNavigation slug={slug} contentType="shader" versionsCount={versions.length} galleryCount={shader.gallery?.length || 0} projectColor={shader.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

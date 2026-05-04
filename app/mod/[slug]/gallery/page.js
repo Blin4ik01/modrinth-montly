@@ -107,7 +107,7 @@ export default async function ModGalleryPage({ params }) {
       <IconPreload iconUrl={mod.icon_url} />
       <ResourceHeader resource={mod} contentType="mod" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="mod" versionsCount={versions.length} galleryCount={gallery.length} />
+      <ContentNavigation slug={slug} contentType="mod" versionsCount={versions.length} galleryCount={gallery.length} projectColor={mod.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

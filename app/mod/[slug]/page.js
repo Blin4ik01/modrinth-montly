@@ -126,7 +126,7 @@ export default async function ModPage({ params }) {
     <div className="max-w-7xl mx-auto">
       <ResourceHeader resource={mod} contentType="mod" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="mod" versionsCount={versions.length} galleryCount={mod.gallery?.length || 0} />
+      <ContentNavigation slug={slug} contentType="mod" versionsCount={versions.length} galleryCount={mod.gallery?.length || 0} projectColor={mod.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

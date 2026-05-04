@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { formatDownloads } from '@/lib/modrinth'
+import { formatDownloads, resolveModrinthProjectAccent } from '@/lib/modrinth'
 import { CATEGORIES } from '@/lib/categories'
 import { RESOURCEPACK_CATEGORIES } from '@/lib/resourcepackCategories'
 import { SHADER_STYLES, SHADER_FEATURES, SHADER_PERFORMANCE } from '@/lib/shaderCategories'
@@ -50,6 +50,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
   ]
 
   const downloads = resource.downloads
+  const downloadAccent = resolveModrinthProjectAccent(resource.color)
   const showMinePluginCheckPromo =
     (contentType === 'mod' || contentType === 'plugin') &&
     (downloads == null || downloads < MINEPLUGIN_PROMO_MAX_DOWNLOADS)
@@ -162,11 +163,11 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
 
                 {showMinePluginCheckPromo ? (
                   <div className="flex shrink-0 flex-col items-center gap-1">
-                    <MobileDownloadButton />
+                    <MobileDownloadButton accent={downloadAccent} />
                     <DownloadPromoConnector />
                   </div>
                 ) : (
-                  <MobileDownloadButton />
+                  <MobileDownloadButton accent={downloadAccent} />
                 )}
               </div>
             </div>

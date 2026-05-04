@@ -11,7 +11,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
   const loaders = (resource.loaders || []).filter(l => l !== 'minecraft')
   const browseRoute = resolveContentTypeRoute(contentType, resource.project_type)
   const gameVersionRanges = sortCompressedRangesDesc(compressVersionRanges(gameVersions))
-  
+
   const environment = getEnvironment(resource.client_side, resource.server_side)
 
   return (
@@ -286,14 +286,14 @@ function resolveContentTypeRoute(contentTypeProp, projectType) {
 
 function getEnvironment(clientSide, serverSide) {
   if (!clientSide && !serverSide) return null
-  
+
   const client = clientSide === 'required' || clientSide === 'optional'
   const server = serverSide === 'required' || serverSide === 'optional'
-  
+
   if (client && server) return 'Клиент и сервер'
   if (client) return 'Клиент'
   if (server) return 'Сервер'
-  
+
   return null
 }
 

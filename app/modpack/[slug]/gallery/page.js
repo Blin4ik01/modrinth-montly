@@ -107,7 +107,7 @@ export default async function ModpackGalleryPage({ params }) {
       <IconPreload iconUrl={modpack.icon_url} />
       <ResourceHeader resource={modpack} contentType="modpack" versions={versions} />
       
-      <ContentNavigation slug={slug} contentType="modpack" versionsCount={versions.length} galleryCount={gallery.length} />
+      <ContentNavigation slug={slug} contentType="modpack" versionsCount={versions.length} galleryCount={gallery.length} projectColor={modpack.color} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">

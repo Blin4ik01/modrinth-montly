@@ -14,6 +14,7 @@ export default async function sitemap() {
     '/news',
     '/extension',
     '/bmadnco',
+    '/protect-bot',
   ]
 
   const staticPages = routes.map((route) => ({
