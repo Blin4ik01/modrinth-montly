@@ -44,7 +44,7 @@ export const viewport = {
   themeColor: '#1bd96a'
 }
 
-const POSTERITY_COMMENT_BODY = `     _    _ 
+const POSTERITY_COMMENT_BODY = ` _    _ 
     (o)--(o)      
    /\.______\\.       
    \\________/     
