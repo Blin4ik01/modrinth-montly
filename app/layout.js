@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
           <noscript dangerouslySetInnerHTML={{ __html: '<div><img src="https://mc.yandex.ru/watch/105182235" style="position:absolute; left:-9999px;" alt="" /></div>' }} />
           <VersionsPreloader />
           <TopNav />
-          <nav className="bg-modrinth-darker shadow-lg hidden lg:block">
+          <nav className="relative z-10 hidden lg:block">
             <div className="container mx-auto px-4 py-3 md:py-4">
               <div className="flex items-center gap-4 md:gap-6">
                 <Suspense fallback={<div className="w-9 h-9 flex-shrink-0"></div>}>
@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
               </div>
             </div>
           </nav>
-          <div className="bg-modrinth-darker flex justify-center pt-2 pb-2 -mt-1 rounded-b-2xl">
+          <div className="relative z-10 flex justify-center pb-2 -mt-1 rounded-b-2xl pt-[5px]">
             <div className="disclaimer-badge">
               <svg className="w-3 h-3 flex-shrink-0 relative z-10" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
