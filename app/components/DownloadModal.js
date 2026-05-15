@@ -278,7 +278,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                   <a
                     href={matchingVersion.files[0].url}
                     download
-                    className={`modrinth-download-button w-full animate-fade-in-up${accent ? ' hover:!brightness-[1.08]' : ''}`}
+                    className={`modrinth-modal-download-button w-full animate-fade-in-up${accent ? ' hover:!brightness-[1.08]' : ''}`}
                     style={
                       accent
                         ? { animationDelay: '200ms', ...downloadBtnAccentStyle }

@@ -1387,7 +1387,8 @@ button.text-white {
   padding-bottom: 15px;
 }
 
-.modrinth-download-button {
+.modrinth-download-button,
+.modrinth-modal-download-button {
   align-items: center;
   background-color: var(--color-green);
   border: 2px solid transparent;
@@ -1426,15 +1427,18 @@ button.text-white {
   }
 }
 
-.modrinth-download-button:hover {
+.modrinth-download-button:hover,
+.modrinth-modal-download-button:hover {
   scale: 1.02;
 }
 
-.modrinth-download-button:active {
+.modrinth-download-button:active,
+.modrinth-modal-download-button:active {
   scale: 0.95;
 }
 
-.modrinth-download-button svg {
+.modrinth-download-button svg,
+.modrinth-modal-download-button svg {
   width: 1.5rem;
   height: 1.5rem;
   stroke-width: 2.5;
