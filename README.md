@@ -6,6 +6,16 @@
 
 **Сайт:** https://modrinth.black/
 
+## For rights holders
+
+> No drama — your work has **not been stolen**. We are only a small **proxy** in front of a great platform.
+>
+> We simply can’t build the same kind of payment system Modrinth has — royalties for views and downloads require infrastructure way beyond what we can realistically run. And to be clear: we make absolutely nothing from this site. No money from traffic, no money from downloads — we actually pay for the servers ourselves just to keep it alive. So please try to understand us too — we love Minecraft just as much as you do.
+>
+> Some authors assume we — the people behind this project — **oppose** the content we’re sometimes **forced** to filter. That is **absolutely not** the case: we’re **not against** that work. Restrictions exist only because we’re **obliged** to apply them so **modrinth.com** stays reachable here, **not** because we dislike you or your project.
+>
+> So extend a bit of goodwill and **please don’t demand we remove your project** from our pages over that alone.
+
 ## Быстрые ссылки
 
 - **[Моды](https://modrinth.black/discover/mods)** - модификации для Minecraft
@@ -121,7 +131,7 @@ npm run dev
 
 ### Фильтрация контента
 
-Сайт блокирует контент по требованиям Роскомнадзора через OOP систему блокировок.
+Сайт блокирует контент через систему блокировок.
 
 **Структура блокировок:**
 
