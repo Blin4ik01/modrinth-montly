@@ -1,5 +1,8 @@
 import HomeClient from './HomeClient'
-import { getModrinthSixTypeCreationsTotal } from '@/lib/modrinthCatalogTotals'
+import {
+  getModrinthPlatformStatistics,
+  getModrinthProjectTypeTotals,
+} from '@/lib/modrinthCatalogTotals'
 
 export const metadata = {
   title: 'ModrinthProxy',
@@ -7,12 +10,23 @@ export const metadata = {
 }
 
 export default async function Home() {
-  let catalogCreationsTotal = null
+  let platformStats = null
+  let categoryTotals = null
   try {
-    const n = await getModrinthSixTypeCreationsTotal()
-    if (n > 0) catalogCreationsTotal = n
+    const [stats, totals] = await Promise.all([
+      getModrinthPlatformStatistics(),
+      getModrinthProjectTypeTotals(),
+    ])
+    if (stats.projects > 0) platformStats = stats
+    if (totals && Object.values(totals).some((n) => n > 0)) categoryTotals = totals
   } catch {
-    catalogCreationsTotal = null
+    platformStats = null
+    categoryTotals = null
   }
-  return <HomeClient catalogCreationsTotal={catalogCreationsTotal} />
+  return (
+    <HomeClient
+      platformStats={platformStats}
+      categoryTotals={categoryTotals}
+    />
+  )
 }

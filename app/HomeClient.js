@@ -8,13 +8,52 @@ function thousandsRu(n) {
   return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(n)
 }
 
-const CREATIONS_TOTAL_FALLBACK = 125000
+function compactCountEn(n) {
+  if (n >= 1_000_000) {
+    const wholeM = Math.floor(n / 1_000_000)
+    if (wholeM >= 10) {
+      return `${wholeM}M+`
+    }
+    const label = Math.floor(n / 100_000) / 10
+    const s = Number.isInteger(label)
+      ? String(label)
+      : label.toFixed(1).replace(/\.0$/, '')
+    return `${s}M+`
+  }
+  if (n >= 1000) {
+    return `${Math.floor(n / 1000)}K+`
+  }
+  return `${thousandsRu(n)}+`
+}
 
-export default function HomeClient({ catalogCreationsTotal }) {
-  const creationsShown =
-    typeof catalogCreationsTotal === 'number' && catalogCreationsTotal > 0
-      ? catalogCreationsTotal
-      : CREATIONS_TOTAL_FALLBACK
+function CategoryTitle({ title, count, tone }) {
+  const label = count > 0 ? compactCountEn(count) : undefined
+  return (
+    <h3
+      className={`category-title-with-count text-xl font-bold text-white mb-2${tone ? ` category-title-with-count--${tone}` : ''}`}
+      {...(label ? { 'data-count': label } : {})}
+    >
+      {title}
+    </h3>
+  )
+}
+
+const STATS_FALLBACK = {
+  projects: 125000,
+  files: 1200000,
+  authors: 54000,
+  versions: 1100000,
+}
+
+export default function HomeClient({ platformStats, categoryTotals }) {
+  const projectsShown =
+    platformStats?.projects > 0 ? platformStats.projects : STATS_FALLBACK.projects
+  const filesShown =
+    platformStats?.files > 0 ? platformStats.files : STATS_FALLBACK.files
+  const authorsShown =
+    platformStats?.authors > 0 ? platformStats.authors : STATS_FALLBACK.authors
+  const versionsShown =
+    platformStats?.versions > 0 ? platformStats.versions : STATS_FALLBACK.versions
   const { release, full } = useMinecraftVersions()
   const { stableLine, snapshotLine } = useMemo(
     () => buildHomeModsVersionCopy(release, full),
@@ -86,7 +125,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
           <div className="text-center mb-12">
           
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-              Откройте для себя {thousandsRu(creationsShown)} творений
+              Откройте для себя {thousandsRu(projectsShown)} творений
             </h2>
             <div className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-100 to-blue-100 dark:from-pink-500/20 dark:to-blue-500/20 text-pink-700 dark:text-pink-300 px-6 py-3 rounded-full text-base font-bold mb-4 border border-pink-200/50 dark:border-transparent" style={{backgroundOrigin: 'border-box', backgroundClip: 'border-box'}}>
               <span>Для игроков Minecraft</span>
@@ -127,22 +166,32 @@ export default function HomeClient({ catalogCreationsTotal }) {
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-black text-modrinth-green mb-2">
-                    {thousandsRu(creationsShown)}
+                    {compactCountEn(projectsShown)}
                   </div>
                   <div className="text-gray-300 text-sm">Проектов</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-blue-400 mb-2">500M+</div>
-                  <div className="text-gray-300 text-sm">Загрузок</div>
+                  <div className="text-3xl font-black text-blue-400 mb-2">
+                    {compactCountEn(filesShown)}
+                  </div>
+                  <div className="text-gray-300 text-sm">Файлов</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-purple-400 mb-2">6</div>
-                  <div className="text-gray-300 text-sm">Категорий</div>
+                  <div className="text-3xl font-black text-purple-400 mb-2">
+                    {compactCountEn(authorsShown)}
+                  </div>
+                  <div className="text-gray-300 text-sm">Авторов</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-orange-400 mb-2">100%</div>
-                  <div className="text-gray-300 text-sm">Бесплатно</div>
+                  <div className="text-3xl font-black text-orange-400 mb-2">
+                    {compactCountEn(versionsShown)}
+                  </div>
+                  <div className="text-gray-300 text-sm">Версий</div>
                 </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-white/10 text-center">
+                <div className="text-2xl md:text-3xl font-black text-emerald-400">100%</div>
+                <div className="text-gray-300 text-sm mt-1">Бесплатно</div>
               </div>
             </div>
           </div>
@@ -393,7 +442,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Моды</h3>
+                  <CategoryTitle title="Моды" count={categoryTotals?.mod} tone="modrinth-green" />
                   <p className="text-sm text-gray-400">Добавьте новые возможности и механики в игру</p>
                 </div>
               </Link>
@@ -405,7 +454,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Плагины</h3>
+                  <CategoryTitle title="Плагины" count={categoryTotals?.plugin} tone="blue" />
                   <p className="text-sm text-gray-400">Расширьте функционал вашего сервера</p>
                 </div>
               </Link>
@@ -417,7 +466,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Шейдеры</h3>
+                  <CategoryTitle title="Шейдеры" count={categoryTotals?.shader} tone="cyan" />
                   <p className="text-sm text-gray-400">Преобразите графику с реалистичным освещением</p>
                 </div>
               </Link>
@@ -429,7 +478,11 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Ресурспаки</h3>
+                  <CategoryTitle
+                    title="Ресурспаки"
+                    count={categoryTotals?.resourcepack}
+                    tone="purple"
+                  />
                   <p className="text-sm text-gray-400">Измените визуальный стиль и звуки игры</p>
                 </div>
               </Link>
@@ -441,7 +494,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Датапаки</h3>
+                  <CategoryTitle title="Датапаки" count={categoryTotals?.datapack} tone="orange" />
                   <p className="text-sm text-gray-400">Добавьте новые рецепты и игровую механику</p>
                 </div>
               </Link>
@@ -453,7 +506,7 @@ export default function HomeClient({ catalogCreationsTotal }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Модпаки</h3>
+                  <CategoryTitle title="Модпаки" count={categoryTotals?.modpack} tone="red" />
                   <p className="text-sm text-gray-400">Готовые сборки модов для быстрого старта</p>
                 </div>
               </Link>

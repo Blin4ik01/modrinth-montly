@@ -7,6 +7,7 @@ import SortDropdown from '@/app/components/SortDropdown'
 import ActiveFilters from '@/app/components/ActiveFilters'
 import ReloadButton from '@/app/components/ReloadButton'
 import SearchInput from '@/app/components/SearchInput'
+import CatalogSearchBlockedNote from '@/app/components/CatalogSearchBlockedNote'
 import ResourceList from '@/app/components/ResourceList'
 
 export async function generateMetadata({ searchParams }) {
@@ -192,11 +193,7 @@ export default async function ModsPage({ searchParams }) {
                   {data ? (
                     <>
                       {data.total_hits.toLocaleString('ru-RU')} модов найдено
-                      {blockedCount > 0 && (
-                        <span className="text-red-400 ml-2">
-                          (из поисковой выдачи удалено {blockedCount} {blockedCount % 10 === 1 && blockedCount % 100 !== 11 ? 'ресурс' : blockedCount % 10 >= 2 && blockedCount % 10 <= 4 && (blockedCount % 100 < 10 || blockedCount % 100 >= 20) ? 'ресурса' : 'ресурсов'})
-                        </span>
-                      )}
+                      <CatalogSearchBlockedNote count={blockedCount} />
                     </>
                   ) : (
                     'Загрузка...'

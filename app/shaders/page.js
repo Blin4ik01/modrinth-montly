@@ -8,6 +8,7 @@ import ActiveFilters from '@/app/components/ActiveFilters'
 import ResourceList from '@/app/components/ResourceList'
 import ReloadButton from '@/app/components/ReloadButton'
 import SearchInput from '@/app/components/SearchInput'
+import CatalogSearchBlockedNote from '@/app/components/CatalogSearchBlockedNote'
 
 export async function generateMetadata({ searchParams }) {
   const page = parseInt(searchParams?.page || '1');
@@ -222,11 +223,7 @@ export default async function ShadersPage({ searchParams }) {
                   {data ? (
                     <>
                       {data.total_hits.toLocaleString('ru-RU')} шейдеров найдено
-                      {blockedCount > 0 && (
-                        <span className="text-red-400 ml-2">
-                          (из поисковой выдачи удалено {blockedCount} {blockedCount % 10 === 1 && blockedCount % 100 !== 11 ? 'ресурс' : blockedCount % 10 >= 2 && blockedCount % 10 <= 4 && (blockedCount % 100 < 10 || blockedCount % 100 >= 20) ? 'ресурса' : 'ресурсов'})
-                        </span>
-                      )}
+                      <CatalogSearchBlockedNote count={blockedCount} />
                     </>
                   ) : (
                     'Загрузка...'
