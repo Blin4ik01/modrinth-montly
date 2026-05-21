@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getMod, getModVersions, getTeamMembers, formatDownloads } from '@/lib/modrinth'
-import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked } from '@/lib/contentFilter'
+import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked, normalizeProjectSlug } from '@/lib/contentFilter'
 import ResourceSidebar from '@/app/components/ResourceSidebar'
 import ContentNavigation from '@/app/components/ContentNavigation'
 import ResourceHeader from '@/app/components/ResourceHeader'
@@ -11,8 +11,9 @@ import rehypeRaw from 'rehype-raw'
 
 export async function generateMetadata({ params }) {
   try {
-    const pack = await getMod(params.slug)
-    const url = `https://modrinth.black/resourcepack/${params.slug}`
+    const slug = normalizeProjectSlug(params.slug)
+    const pack = await getMod(slug)
+    const url = `https://modrinth.black/resourcepack/${slug}`
     const fullDescription = pack.description || `Скачать ${pack.title} для Minecraft. ${formatDownloads(pack.downloads)} загрузок. Поддержка версий: ${pack.game_versions?.slice(0, 3).join(', ')}.`
     
     return {
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ResourcepackPage({ params }) {
-  const { slug } = params;
+  const slug = normalizeProjectSlug(params.slug);
   
   if (isProjectBlocked(slug)) {
     return (

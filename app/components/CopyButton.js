@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import StyledTooltip from './StyledTooltip'
 
-export default function CopyButton({ text }) {
+export default function CopyButton({ text, tooltipLabel = 'Скопировать ID в буфер обмена', inline = false }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -16,11 +17,16 @@ export default function CopyButton({ text }) {
   }
 
   return (
+    <StyledTooltip label={copied ? 'Скопировано' : tooltipLabel}>
     <button
+      type="button"
       onClick={handleCopy}
-      className="inline-flex items-center gap-2 px-2 py-1 bg-gray-800 hover:bg-gray-700 text-sm font-mono select-text w-fit transition-all duration-200 ease-in-out hover:opacity-90"
-      style={{ borderRadius: '10px' }}
-      title="Скопировать ID в буфер обмена"
+      className={
+        inline
+          ? 'inline-flex items-center gap-1 font-mono font-medium text-gray-900 dark:text-white select-text w-fit transition-colors hover:text-modrinth-green'
+          : 'inline-flex items-center gap-2 px-2 py-1 bg-gray-800 hover:bg-gray-700 text-sm font-mono select-text w-fit transition-all duration-200 ease-in-out hover:opacity-90'
+      }
+      style={inline ? undefined : { borderRadius: '10px' }}
     >
       <span>{text}</span>
       {copied ? (
@@ -50,6 +56,7 @@ export default function CopyButton({ text }) {
         </svg>
       )}
     </button>
+    </StyledTooltip>
   )
 }
 

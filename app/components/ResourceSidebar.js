@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { LOADERS } from '@/lib/loaders'
 import { compressSidebarGameVersions } from '@/lib/minecraftVersionSort'
 import CompressedGameVersionsChips from './CompressedGameVersionsChips'
+import CopyButton from './CopyButton'
 
 export default function ResourceSidebar({ resource, teamMembers = [], contentType = null }) {
   const gameVersions = resource.game_versions || []
@@ -12,6 +13,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
   const gameVersionRanges = compressSidebarGameVersions(gameVersions)
 
   const environment = getEnvironment(resource.client_side, resource.server_side)
+  const projectId = resource.id ?? resource.project_id
 
   return (
     <div className="space-y-4">
@@ -224,6 +226,12 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
             <div>
               <span className="text-gray-600 dark:text-gray-400">Обновлён:</span>
               <span className="text-gray-900 dark:text-white ml-1">{formatTimeAgo(resource.updated)}</span>
+            </div>
+          )}
+          {projectId && (
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="text-gray-600 dark:text-gray-400">ID проекта:</span>
+              <CopyButton text={projectId} inline />
             </div>
           )}
         </div>
