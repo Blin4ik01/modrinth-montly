@@ -10,7 +10,6 @@ export function TooltipProvider({ children }) {
   )
 }
 
-/** Текст через портал (не режется overflow родителей), клавиатура и скринридеры через Radix. */
 export default function StyledTooltip({ children, label, side = 'top', contentClassName = '' }) {
   return (
     <Tooltip.Root>

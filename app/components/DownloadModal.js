@@ -1,10 +1,111 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { compareMinecraftVersionsDesc } from '@/lib/minecraftVersionSort'
 import { resolveModrinthProjectAccent } from '@/lib/modrinth'
 import StyledTooltip from './StyledTooltip'
+import { favoritesManager } from '@/lib/favoritesManager'
+import Lottie from 'lottie-react'
+import bookmarkAnimation from '@/public/animations/bookmark.json'
+import noBookmarkAnimation from '@/public/animations/no_bookmark.json'
+
+function LottieStar({ isFavorite, animationData, onClick, label, alwaysVisible = false }) {
+  const lottieRef = useRef(null)
+  const justClickedRef = useRef(false)
+
+  const updateFrame = () => {
+    const player = lottieRef.current
+    if (!player) return
+
+    if (isFavorite) {
+      if (justClickedRef.current) {
+        player.goToAndPlay(0, true)
+      } else {
+        player.goToAndStop(player.getDuration(true) - 1, true)
+      }
+    } else {
+      player.goToAndStop(0, true)
+    }
+    justClickedRef.current = false
+  }
+
+  useEffect(() => {
+    updateFrame()
+  }, [isFavorite])
+
+  const handleDOMLoaded = () => {
+    updateFrame()
+  }
+
+  const handleClick = (e) => {
+    justClickedRef.current = true
+    if (onClick) onClick(e)
+  }
+
+  const handleMouseEnter = () => {
+    if (lottieRef.current) {
+      lottieRef.current.goToAndPlay(0, true)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    const player = lottieRef.current
+    if (!player) return
+    if (isFavorite) {
+      player.goToAndStop(player.getDuration(true) - 1, true)
+    } else {
+      player.goToAndStop(0, true)
+    }
+  }
+
+  if (!animationData) {
+    return (
+      <StyledTooltip label={label}>
+        <button
+          type="button"
+          onClick={onClick}
+          className={`p-2 rounded-lg transition-all duration-200 ${
+            isFavorite || alwaysVisible
+              ? 'text-yellow-400 scale-110'
+              : 'text-gray-500 hover:text-yellow-400 hover:scale-110 opacity-0 group-hover/row:opacity-100 focus:opacity-100'
+          }`}
+        >
+          <svg className="w-4 h-4" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          </svg>
+        </button>
+      </StyledTooltip>
+    )
+  }
+
+  return (
+    <StyledTooltip label={label}>
+      <button
+        type="button"
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`p-1 rounded-lg transition-all duration-200 hover:scale-110 flex items-center justify-center w-8 h-8 ${
+          isFavorite || alwaysVisible
+            ? ''
+            : 'opacity-0 group-hover/row:opacity-100 focus:opacity-100'
+        }`}
+      >
+        <Lottie
+          lottieRef={lottieRef}
+          animationData={animationData}
+          loop={false}
+          autoplay={false}
+          onDOMLoaded={handleDOMLoaded}
+          onDataReady={handleDOMLoaded}
+          style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
+        />
+      </button>
+    </StyledTooltip>
+  )
+}
 
 export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
   const router = useRouter()
@@ -13,6 +114,11 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
     ? { backgroundColor: accent.accentHex, color: accent.activeFgHex }
     : undefined
   const [isOpen, setIsOpen] = useState(false)
+  const [portalTarget, setPortalTarget] = useState(null)
+
+  useEffect(() => {
+    setPortalTarget(document.body)
+  }, [])
 
   useEffect(() => {
     const handleOpenModal = () => {
@@ -23,10 +129,85 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
       window.removeEventListener('open-download-modal', handleOpenModal)
     }
   }, [])
+
   const [selectedMcVersion, setSelectedMcVersion] = useState('')
   const [selectedLoader, setSelectedLoader] = useState('')
   const [versionSearch, setVersionSearch] = useState('')
   const [showAllVersions, setShowAllVersions] = useState(false)
+  const [favMcVersion, setFavMcVersion] = useState('')
+  const [favLoader, setFavLoader] = useState('')
+
+
+  useEffect(() => {
+    if (isOpen) {
+      const activeFavVersion = favoritesManager.getFavoriteMcVersion(contentType)
+      const activeFavLoader = favoritesManager.getFavoriteLoader(contentType)
+      setFavMcVersion(activeFavVersion)
+      setFavLoader(activeFavLoader)
+      const availableMcVersions = new Set()
+      versions.forEach(version => {
+        version.game_versions.forEach(v => availableMcVersions.add(v))
+      })
+      if (activeFavVersion && availableMcVersions.has(activeFavVersion)) {
+        setSelectedMcVersion(activeFavVersion)
+        const availableLoaders = new Set()
+        versions.forEach(version => {
+          if (version.game_versions.includes(activeFavVersion)) {
+            version.loaders.forEach(l => availableLoaders.add(l))
+          }
+        })
+        if (activeFavLoader && availableLoaders.has(activeFavLoader)) {
+          setSelectedLoader(activeFavLoader)
+        } else {
+          setSelectedLoader('')
+        }
+      } else {
+        setSelectedMcVersion('')
+        setSelectedLoader('')
+      }
+    }
+  }, [isOpen, versions, contentType])
+
+  const selectMcVersion = (version) => {
+    setSelectedMcVersion(version)
+    const availableLoaders = new Set()
+    versions.forEach(v => {
+      if (v.game_versions.includes(version)) {
+        v.loaders.forEach(l => availableLoaders.add(l))
+      }
+    })
+    const activeFavLoader = favoritesManager.getFavoriteLoader(contentType)
+    if (activeFavLoader && availableLoaders.has(activeFavLoader)) {
+      setSelectedLoader(activeFavLoader)
+    } else {
+      setSelectedLoader('')
+    }
+  }
+
+  const toggleFavoriteMcVersion = (version) => {
+    const current = favoritesManager.getFavoriteMcVersion(contentType)
+    const newValue = current === version ? '' : version
+    favoritesManager.setFavoriteMcVersion(newValue, contentType)
+    setFavMcVersion(newValue)
+    if (newValue === version) {
+      selectMcVersion(version)
+    } else {
+      setSelectedMcVersion('')
+      setSelectedLoader('')
+    }
+  }
+
+  const toggleFavoriteLoader = (loader) => {
+    const current = favoritesManager.getFavoriteLoader(contentType)
+    const newValue = current === loader ? '' : loader
+    favoritesManager.setFavoriteLoader(newValue, contentType)
+    setFavLoader(newValue)
+    if (newValue === loader) {
+      setSelectedLoader(loader)
+    } else {
+      setSelectedLoader('')
+    }
+  }
 
   const isReleaseVersion = (version) => {
     return /^\d+\.\d+(\.\d+)?$/.test(version)
@@ -119,9 +300,9 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
         </button>
       </StyledTooltip>
 
-      {isOpen && (
+      {isOpen && portalTarget && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
           onClick={() => setIsOpen(false)}
         >
           <div 
@@ -178,8 +359,24 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                 </div>
                 
                 {selectedMcVersion ? (
-                  <div className="mb-2 px-3 py-2 bg-modrinth-green/20 border border-modrinth-green/50 rounded-lg text-sm text-modrinth-green font-medium">
-                    {selectedMcVersion}
+                  <div className="mb-2 flex items-center gap-2 px-3 py-2 bg-modrinth-green/20 border border-modrinth-green/50 rounded-lg text-sm text-modrinth-green font-medium animate-fade-in">
+                    <LottieStar
+                      isFavorite={favMcVersion === selectedMcVersion}
+                      alwaysVisible={true}
+                      animationData={favMcVersion === selectedMcVersion ? noBookmarkAnimation : bookmarkAnimation}
+                      onClick={() => toggleFavoriteMcVersion(selectedMcVersion)}
+                      label={
+                        favMcVersion === selectedMcVersion ? (
+                          'Убрать из избранного'
+                        ) : (
+                          <span className="flex flex-col items-center">
+                            <span>Сделать избранной версией</span>
+                            <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
+                          </span>
+                        )
+                      }
+                    />
+                    <span>{selectedMcVersion}</span>
                   </div>
                 ) : (
                   <>
@@ -197,20 +394,36 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                     </div>
                     <div className="space-y-1 max-h-48 overflow-y-auto custom-scrollbar bg-gray-800/30 rounded-lg p-2">
                       {filteredMcVersions.map(version => (
-                        <button
+                        <div
                           key={version}
-                          onClick={() => {
-                            setSelectedMcVersion(version)
-                            setSelectedLoader('')
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                            selectedMcVersion === version
-                              ? 'bg-modrinth-green text-black'
-                              : 'text-gray-300 hover:bg-gray-700/50'
-                          }`}
+                          className="flex items-center gap-1 group/row"
                         >
-                          {version}
-                        </button>
+                          <LottieStar
+                            isFavorite={favMcVersion === version}
+                            animationData={favMcVersion === version ? noBookmarkAnimation : bookmarkAnimation}
+                            onClick={() => toggleFavoriteMcVersion(version)}
+                            label={
+                              favMcVersion === version ? (
+                                'Убрать из избранного'
+                              ) : (
+                                <span className="flex flex-col items-center">
+                                  <span>Сделать избранной версией</span>
+                                  <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
+                                </span>
+                              )
+                            }
+                          />
+                          <button
+                            onClick={() => selectMcVersion(version)}
+                            className={`flex-1 text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                              selectedMcVersion === version
+                                ? 'bg-modrinth-green text-black'
+                                : 'text-gray-300 hover:bg-gray-700/50'
+                            }`}
+                          >
+                            {version}
+                          </button>
+                        </div>
                       ))}
                     </div>
                   </>
@@ -236,27 +449,64 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                   </div>
                   
                   {selectedLoader ? (
-                    <div className="mb-2 px-3 py-2 bg-modrinth-green/20 border border-modrinth-green/50 rounded-lg text-sm text-modrinth-green font-medium">
-                      {getLoaderName(selectedLoader)}
+                    <div className="mb-2 flex items-center gap-2 px-3 py-2 bg-modrinth-green/20 border border-modrinth-green/50 rounded-lg text-sm text-modrinth-green font-medium animate-fade-in">
+                      <LottieStar
+                        isFavorite={favLoader === selectedLoader}
+                        alwaysVisible={true}
+                        animationData={favLoader === selectedLoader ? noBookmarkAnimation : bookmarkAnimation}
+                        onClick={() => toggleFavoriteLoader(selectedLoader)}
+                        label={
+                          favLoader === selectedLoader ? (
+                            'Убрать из избранного'
+                          ) : (
+                            <span className="flex flex-col items-center">
+                              <span>Сделать избранным загрузчиком</span>
+                              <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
+                            </span>
+                          )
+                        }
+                      />
+                      <span>{getLoaderName(selectedLoader)}</span>
                     </div>
                   ) : (
                     <div className="space-y-1">
                       {loaders.map((loader, i) => (
-                        <button
+                        <div
                           key={loader}
-                          onClick={() => setSelectedLoader(loader)}
-                          disabled={!selectedMcVersion}
                           style={{ animationDelay: `${i * 50}ms` }}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all animate-fade-in-up ${
-                            !selectedMcVersion
-                              ? 'bg-gray-800/30 text-gray-600 cursor-not-allowed'
-                              : selectedLoader === loader
-                                ? 'bg-modrinth-green text-black'
-                                : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                          }`}
+                          className="flex items-center gap-1 group/row animate-fade-in-up"
                         >
-                          {getLoaderName(loader)}
-                        </button>
+                          {selectedMcVersion && (
+                            <LottieStar
+                              isFavorite={favLoader === loader}
+                              animationData={favLoader === loader ? noBookmarkAnimation : bookmarkAnimation}
+                              onClick={() => toggleFavoriteLoader(loader)}
+                              label={
+                                favLoader === loader ? (
+                                  'Убрать из избранного'
+                                ) : (
+                                  <span className="flex flex-col items-center">
+                                    <span>Сделать избранным загрузчиком</span>
+                                    <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
+                                  </span>
+                                )
+                              }
+                            />
+                          )}
+                          <button
+                            onClick={() => setSelectedLoader(loader)}
+                            disabled={!selectedMcVersion}
+                            className={`flex-1 text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                              !selectedMcVersion
+                                ? 'bg-gray-800/30 text-gray-600 cursor-not-allowed'
+                                : selectedLoader === loader
+                                  ? 'bg-modrinth-green text-black'
+                                  : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                            }`}
+                          >
+                            {getLoaderName(loader)}
+                          </button>
+                        </div>
                       ))}
                     </div>
                   )}
@@ -264,14 +514,18 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
               )}
 
               {matchingVersion && matchingVersion.files && matchingVersion.files.length > 0 && (
-                <div className="bg-gray-800/30 rounded-xl p-4 space-y-3 animate-fade-in-up">
+                <div className={`rounded-xl p-4 space-y-3 animate-fade-in-up transition-all duration-300 ${
+                  (favMcVersion && matchingVersion.game_versions.includes(favMcVersion)) && (favLoader && matchingVersion.loaders.includes(favLoader))
+                    ? 'border border-yellow-500/30 bg-yellow-500/5 shadow-[0_0_15px_rgba(234,179,8,0.15)]'
+                    : 'bg-gray-800/30'
+                }`}>
                   <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                     <div className="w-10 h-10 bg-modrinth-green rounded-lg flex items-center justify-center text-black font-bold flex-shrink-0 transform transition-transform duration-300 hover:scale-110">
                       R
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-400">{matchingVersion.version_number}</p>
-                      <p className="font-semibold text-sm">{matchingVersion.name}</p>
+                      <p className="font-semibold text-sm truncate">{matchingVersion.name}</p>
                     </div>
                   </div>
                   
@@ -309,7 +563,8 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        portalTarget
       )}
     </>
   )
