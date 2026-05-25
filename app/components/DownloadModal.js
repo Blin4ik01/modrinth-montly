@@ -434,7 +434,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                 )}
               </div>
 
-              {loaders.length > 0 && (
+              {loaders.length > 0 && contentType !== 'resourcepack' && contentType !== 'resourcepacks' && (
                 <div className="animate-fade-in-up">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-sm font-semibold text-gray-300">Выберите загрузчик</h3>
