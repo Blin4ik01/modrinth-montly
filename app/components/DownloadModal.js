@@ -158,6 +158,8 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
         })
         if (activeFavLoader && availableLoaders.has(activeFavLoader)) {
           setSelectedLoader(activeFavLoader)
+        } else if (availableLoaders.size === 1) {
+          setSelectedLoader(Array.from(availableLoaders)[0])
         } else {
           setSelectedLoader('')
         }
@@ -179,6 +181,8 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
     const activeFavLoader = favoritesManager.getFavoriteLoader(contentType)
     if (activeFavLoader && availableLoaders.has(activeFavLoader)) {
       setSelectedLoader(activeFavLoader)
+    } else if (availableLoaders.size === 1) {
+      setSelectedLoader(Array.from(availableLoaders)[0])
     } else {
       setSelectedLoader('')
     }
