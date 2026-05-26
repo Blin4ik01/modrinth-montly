@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getAuthorInfo, getAuthorProjects, formatAuthorStats, getProjectTypeDisplayName } from '@/lib/author'
 import { filterModContent, filterModsList, isUserBlocked } from '@/lib/contentFilter'
 import { formatDownloads } from '@/lib/modrinth'
-import ResourceCard from '@/app/components/ResourceCard'
+import ResourceList from '@/app/components/ResourceList'
 import dynamic from 'next/dynamic'
 
 const AuthorProjectTabs = dynamic(() => import('@/app/components/AuthorProjectTabs'), {
@@ -165,11 +165,9 @@ export default async function AuthorPage({ params, searchParams }) {
             totalProjects={stats.projectCount}
           />
 
-          <div className="space-y-4">
+          <div className="mt-4">
             {projects.hits.length > 0 ? (
-              projects.hits.map((project) => (
-                <ResourceCard key={project.project_id} resource={project} type={project.project_type} />
-              ))
+              <ResourceList resources={projects.hits} type="mod" isProfile={true} />
             ) : (
               <div className="text-center py-16">
                 <div className="mb-4">

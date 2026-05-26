@@ -5,10 +5,64 @@ import { useState, useEffect, useRef } from 'react'
 import ResourceCard from './ResourceCard'
 import ResourceCardSkeleton from './ResourceCardSkeleton'
 
-export default function ResourceList({ resources, type = 'mod' }) {
+const getSettingKey = (type, isProfile) => {
+  if (isProfile) return 'profiles'
+  const mapping = {
+    'mod': 'mods',
+    'plugin': 'plugins',
+    'datapack': 'datapacks',
+    'shader': 'shaders',
+    'resourcepack': 'resourcepacks',
+    'modpack': 'modpacks'
+  }
+  return mapping[type] || `${type}s`
+}
+
+export default function ResourceList({ resources, type = 'mod', isProfile = false }) {
   const searchParams = useSearchParams()
   const [showSkeleton, setShowSkeleton] = useState(false)
   const prevParamsRef = useRef(searchParams.toString())
+  const [layout, setLayout] = useState(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    const readLayout = () => {
+      const saved = localStorage.getItem('project-list-layouts')
+      let currentLayout = null
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          const key = getSettingKey(type, isProfile)
+          currentLayout = parsed[key]
+        } catch (e) {}
+      }
+      if (!currentLayout) {
+        const defaultGrid = type === 'resourcepack' || type === 'shader'
+        currentLayout = defaultGrid ? 'grid' : 'rows'
+      }
+      setLayout(currentLayout)
+    }
+
+    if (mounted) {
+      readLayout()
+    }
+
+    const handleStorageChange = () => {
+      readLayout()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('layout-settings-changed', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('layout-settings-changed', handleStorageChange)
+    }
+  }, [type, isProfile, mounted])
 
   useEffect(() => {
     const currentParams = searchParams.toString()
@@ -24,15 +78,18 @@ export default function ResourceList({ resources, type = 'mod' }) {
     }
   }, [searchParams])
 
-  const packGrid = type === 'resourcepack' || type === 'shader'
-  const listClass = packGrid ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : 'space-y-3'
-  const skeletonCount = packGrid ? 6 : 10
+  const defaultGrid = type === 'resourcepack' || type === 'shader'
+  const activeLayout = (mounted && layout) ? layout : (defaultGrid ? 'grid' : 'rows')
+  const isGrid = activeLayout === 'grid'
+
+  const listClass = isGrid ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : 'space-y-3'
+  const skeletonCount = isGrid ? 6 : 10
 
   if (showSkeleton) {
     return (
       <div className={listClass}>
         {Array.from({ length: skeletonCount }).map((_, index) => (
-          <ResourceCardSkeleton key={index} variant={packGrid ? 'resourcepack' : 'default'} />
+          <ResourceCardSkeleton key={index} variant={isGrid ? 'resourcepack' : 'default'} />
         ))}
       </div>
     )
@@ -41,7 +98,12 @@ export default function ResourceList({ resources, type = 'mod' }) {
   return (
     <div className={listClass}>
       {resources.map((resource) => (
-        <ResourceCard key={resource.project_id} resource={resource} type={type} />
+        <ResourceCard 
+          key={resource.project_id} 
+          resource={resource} 
+          type={resource.project_type || type} 
+          forceLayout={activeLayout}
+        />
       ))}
     </div>
   )

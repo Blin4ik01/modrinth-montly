@@ -12,6 +12,7 @@ import Logo from './components/Logo'
 import VersionsPreloader from './components/VersionsPreloader'
 import AppTooltipProvider from './components/AppTooltipProvider'
 import ExtensionBanner from './components/ExtensionBanner'
+import AppSettingsSync from './components/AppSettingsSync'
 
 const nunito = Nunito({
   subsets: ['latin', 'cyrillic'],
@@ -57,6 +58,23 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru" className={`scroll-smooth ${nunito.variable}`} suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('advanced-rendering') === 'false') {
+                  document.documentElement.classList.add('no-advanced-rendering');
+                }
+                if (localStorage.getItem('search-sidebar-right') === 'true') {
+                  document.documentElement.classList.add('search-sidebar-right');
+                }
+                if (localStorage.getItem('project-sidebar-left') === 'true') {
+                  document.documentElement.classList.add('project-sidebar-left');
+                }
+              } catch (e) {}
+            `
+          }}
+        />
         <Script id="__posterity" strategy="beforeInteractive">
           {`(function(){var h=document.documentElement,t=${JSON.stringify(POSTERITY_COMMENT_BODY)},c=document.createComment(t),f=h.firstChild;if(f)h.insertBefore(c,f);else h.appendChild(c);var s=document.currentScript||document.getElementById("__posterity");if(s&&s.parentNode)s.parentNode.removeChild(s);})();`}
         </Script>
@@ -94,6 +112,7 @@ export default function RootLayout({ children }) {
           storageKey="modrinth-theme"
         >
           <AppTooltipProvider>
+          <AppSettingsSync />
           <noscript dangerouslySetInnerHTML={{ __html: '<div><img src="https://mc.yandex.ru/watch/105182235" style="position:absolute; left:-9999px;" alt="" /></div>' }} />
           <VersionsPreloader />
           <TopNav />

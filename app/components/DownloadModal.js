@@ -208,6 +208,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
 
   useEffect(() => {
     if (isOpen) {
+      wasOpenedRef.current = true
       setShowLauncherHelp(false)
       const activeFavVersion = favoritesManager.getFavoriteMcVersion(contentType)
       const activeFavLoader = favoritesManager.getFavoriteLoader(contentType)
@@ -223,8 +224,11 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
         version.game_versions.forEach(v => availableMcVersions.add(v))
       })
 
+      let targetVersion = ''
+      let targetLoader = ''
+
       if (urlVersion && availableMcVersions.has(urlVersion)) {
-        setSelectedMcVersion(urlVersion)
+        targetVersion = urlVersion
         const availableLoaders = new Set()
         versions.forEach(version => {
           if (version.game_versions.includes(urlVersion)) {
@@ -232,14 +236,12 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
           }
         })
         if (urlLoader && availableLoaders.has(urlLoader)) {
-          setSelectedLoader(urlLoader)
+          targetLoader = urlLoader
         } else if (availableLoaders.size === 1) {
-          setSelectedLoader(Array.from(availableLoaders)[0])
-        } else {
-          setSelectedLoader('')
+          targetLoader = Array.from(availableLoaders)[0]
         }
       } else if (activeFavVersion && availableMcVersions.has(activeFavVersion)) {
-        setSelectedMcVersion(activeFavVersion)
+        targetVersion = activeFavVersion
         const availableLoaders = new Set()
         versions.forEach(version => {
           if (version.game_versions.includes(activeFavVersion)) {
@@ -247,21 +249,28 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
           }
         })
         if (activeFavLoader && availableLoaders.has(activeFavLoader)) {
-          setSelectedLoader(activeFavLoader)
+          targetLoader = activeFavLoader
         } else if (availableLoaders.size === 1) {
-          setSelectedLoader(Array.from(availableLoaders)[0])
-        } else {
-          setSelectedLoader('')
+          targetLoader = Array.from(availableLoaders)[0]
         }
-      } else {
-        setSelectedMcVersion('')
-        setSelectedLoader('')
       }
+
+      setSelectedMcVersion(targetVersion)
+      setSelectedLoader(targetLoader)
+      isInitialUrlSyncRef.current = true
+    } else {
+      isInitialUrlSyncRef.current = false
     }
   }, [isOpen, versions, contentType])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      if (!wasOpenedRef.current) {
+        return
+      }
+      if (isOpen && !isInitialUrlSyncRef.current) {
+        return
+      }
       const url = new URL(window.location.href)
       if (isOpen) {
         url.hash = 'download'
@@ -288,6 +297,8 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
   }, [isOpen, selectedMcVersion, selectedLoader])
 
   const originalTitleRef = useRef('')
+  const isInitialUrlSyncRef = useRef(false)
+  const wasOpenedRef = useRef(false)
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -479,16 +490,16 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
           onClick={() => setIsOpen(false)}
         >
           <div 
-            className="bg-modrinth-dark rounded-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl animate-fade-in-up transform"
+            className="bg-white dark:bg-modrinth-dark text-gray-900 dark:text-white rounded-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl animate-fade-in-up transform"
             style={{ maxWidth: '550px', animationDelay: '0ms' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-modrinth-darker p-5 flex items-center justify-between">
+            <div className="bg-gray-50 dark:bg-modrinth-darker border-b border-gray-200 dark:border-none p-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {mod.icon_url && (
                   <img src={mod.icon_url} alt={mod.title} className="w-10 h-10 rounded-lg" />
                 )}
-                <h2 className="text-lg font-bold text-white">Скачать {mod.title}</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Скачать {mod.title}</h2>
               </div>
               <div className="flex items-center gap-1.5">
                 <StyledTooltip label="Посмотреть все версии">
@@ -497,7 +508,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                       setIsOpen(false)
                       window.location.href = `/${contentType.replace(/s$/, '')}/${mod.slug}/versions`
                     }}
-                    className="p-1.5 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-white flex items-center justify-center"
+                    className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center justify-center"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" />
@@ -507,7 +518,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                 <StyledTooltip label="Закрыть">
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1.5 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center text-gray-400 hover:text-white"
+                    className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -549,15 +560,15 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 px-4 my-2">
-                    <div className="flex h-[2px] w-full rounded-2xl bg-gray-800"></div>
-                    <span className="flex-shrink-0 text-sm font-semibold text-gray-400">или</span>
-                    <div className="flex h-[2px] w-full rounded-2xl bg-gray-800"></div>
+                    <div className="flex h-[2px] w-full rounded-2xl bg-gray-200 dark:bg-gray-800"></div>
+                    <span className="flex-shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">или</span>
+                    <div className="flex h-[2px] w-full rounded-2xl bg-gray-200 dark:bg-gray-800"></div>
                   </div>
                 </>
               )}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true" className="w-4.5 h-4.5 text-gray-400">
                       <path d="M6 11h4M8 9v4M15 12h.01M18 10h.01M17.32 5H6.68a4 4 0 0 0-3.978 3.59q-.008.077-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258q-.01-.075-.017-.151A4 4 0 0 0 17.32 5" />
                     </svg>
@@ -588,7 +599,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                 </div>
                 
                 {selectedMcVersion ? (
-                  <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-[#16181c] border border-gray-800 rounded-xl text-sm text-gray-200 font-medium animate-fade-in">
+                  <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-[#16181c] rounded-xl text-sm text-gray-900 dark:text-gray-200 font-medium animate-fade-in">
                     <LottieStar
                       isFavorite={favMcVersion === selectedMcVersion}
                       alwaysVisible={true}
@@ -618,10 +629,10 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                         placeholder="Поиск версий игры..."
                         value={versionSearch}
                         onChange={(e) => setVersionSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 rounded-lg text-sm transition-colors"
+                        className="w-full pl-10 pr-4 py-2 rounded-lg text-sm transition-colors bg-gray-100 dark:bg-[#16181c] text-gray-900 dark:text-white border border-gray-200 dark:border-[#2e3035]/50 focus:border-modrinth-green focus:outline-none"
                       />
                     </div>
-                    <div className="space-y-1 max-h-48 overflow-y-auto custom-scrollbar bg-gray-800/30 rounded-lg p-2">
+                    <div className="space-y-1 max-h-48 overflow-y-auto custom-scrollbar bg-transparent dark:bg-transparent rounded-lg p-2">
                       {filteredMcVersions.map(version => (
                         <div
                           key={version}
@@ -647,7 +658,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                             className={`flex-1 text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                               selectedMcVersion === version
                                 ? 'bg-modrinth-green text-black'
-                                : 'text-gray-300 hover:bg-gray-700/50'
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#202225]'
                             }`}
                           >
                             {version}
@@ -662,7 +673,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
               {loaders.length > 0 && contentType !== 'resourcepack' && contentType !== 'resourcepacks' && (
                 <div className="animate-fade-in-up">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true" className="w-4.5 h-4.5 text-gray-400">
                         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
                       </svg>
@@ -683,7 +694,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                   </div>
                   
                   {selectedLoader ? (
-                    <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-[#16181c] border border-gray-800 rounded-xl text-sm text-gray-200 font-medium animate-fade-in">
+                    <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-[#16181c] rounded-xl text-sm text-gray-900 dark:text-gray-200 font-medium animate-fade-in">
                       <LottieStar
                         isFavorite={favLoader === selectedLoader}
                         alwaysVisible={true}
@@ -732,10 +743,10 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                             disabled={!selectedMcVersion}
                             className={`flex-1 text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                               !selectedMcVersion
-                                ? 'bg-gray-800/30 text-gray-600 cursor-not-allowed'
+                                ? 'bg-gray-200/30 dark:bg-[#16181c]/30 text-gray-400 dark:text-gray-600 cursor-not-allowed'
                                 : selectedLoader === loader
                                   ? 'bg-modrinth-green text-black'
-                                  : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                                  : 'bg-transparent dark:bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#202225]'
                             }`}
                           >
                             {getLoaderName(loader)}
@@ -751,24 +762,19 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                 <div
                   className={`grid grid-cols-[min-content_1fr_auto_auto] items-center gap-2 rounded-2xl p-2 w-full animate-fade-in-up transition-all duration-300 ${
                     (favMcVersion && matchingVersion.game_versions.includes(favMcVersion)) && (favLoader && matchingVersion.loaders.includes(favLoader))
-                      ? 'border border-yellow-500/30 bg-yellow-500/5 shadow-[0_0_15px_rgba(234,179,8,0.15)]'
-                      : 'border border-gray-800'
+                      ? 'border border-yellow-500/20 dark:border-yellow-500/30 bg-yellow-50/40 dark:bg-yellow-500/5 shadow-[0_0_15px_rgba(234,179,8,0.15)]'
+                      : 'border border-gray-200 dark:border-[#2e3035] bg-gray-50 dark:bg-[#16181c]'
                   }`}
-                  style={
-                    (favMcVersion && matchingVersion.game_versions.includes(favMcVersion)) && (favLoader && matchingVersion.loaders.includes(favLoader))
-                      ? undefined
-                      : { backgroundColor: '#16181c' }
-                  }
                 >
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${versionChannelLetterRingClass(matchingVersion.version_type || 'release')}`}>
                     {(matchingVersion.version_type || 'release')[0].toUpperCase()}
                   </div>
                   
                   <div className="flex min-w-0 flex-col gap-0.5">
-                    <h4 className="my-0 truncate text-nowrap text-sm font-extrabold leading-none text-white">
+                    <h4 className="my-0 truncate text-nowrap text-sm font-extrabold leading-none text-gray-900 dark:text-white">
                       {matchingVersion.version_number}
                     </h4>
-                    <p className="m-0 truncate text-nowrap text-xs font-semibold text-gray-400">
+                    <p className="m-0 truncate text-nowrap text-xs font-semibold text-gray-500 dark:text-gray-400">
                       {matchingVersion.name}
                     </p>
                   </div>
@@ -798,7 +804,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                     <a
                       href={`/${contentType.replace(/s$/, '')}/${mod.slug}/version/${matchingVersion.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-800 hover:bg-gray-700/80 active:scale-[0.95] text-gray-300 transition-all flex-shrink-0"
+                      className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-200 dark:bg-[#2e3035] hover:bg-gray-300 dark:hover:bg-[#3b3d45] active:scale-[0.95] text-gray-700 dark:text-gray-300 transition-all flex-shrink-0"
                       aria-label="View version"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">

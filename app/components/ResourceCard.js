@@ -11,7 +11,7 @@ function uniqueStrings(list) {
   return [...new Set(list)]
 }
 
-export default function ResourceCard({ resource, type = 'mod' }) {
+export default function ResourceCard({ resource, type = 'mod', forceLayout = null }) {
   const typeMap = {
     'mod': 'mod',
     'plugin': 'plugin',
@@ -93,9 +93,9 @@ export default function ResourceCard({ resource, type = 'mod' }) {
   const pluginTitleHoverAccent =
     type === 'plugin' ? modrinthHoverAccentHex(resource.color) : null
 
-  const previewGridTypes = ['resourcepack', 'shader']
+  const activeLayout = forceLayout || ((type === 'resourcepack' || type === 'shader') ? 'grid' : 'rows')
 
-  if (previewGridTypes.includes(type)) {
+  if (activeLayout === 'grid') {
     const pickUrl = (entry) =>
       typeof entry === 'string' && entry
         ? entry
