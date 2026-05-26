@@ -39,10 +39,10 @@ export default function ProtectionBlock() {
         <div>
           <h3 className="font-bold text-lg text-white mb-3 flex items-center gap-2 drop-shadow-lg">
             Защита от атак
-            <span className="text-xs px-2 py-1 bg-orange-500/30 text-orange-100 rounded-full backdrop-blur-sm">mitelis.com</span>
+            <span className="text-xs px-2 py-1 bg-orange-500/30 text-orange-100 rounded-full backdrop-blur-sm">mitelis.net</span>
           </h3>
           <p className="text-orange-50 leading-relaxed mb-4 drop-shadow-md">
-            Наш сайт защищён от DDoS-атак и других видов кибератак с помощью сервиса <span className="font-semibold text-orange-100">mitelis.com</span>. 
+            Наш сайт защищён от DDoS-атак и других видов кибератак с помощью сервиса <span className="font-semibold text-orange-100">mitelis.net</span>. 
             Благодаря этому сервису мы можем гарантировать доступность сервиса и быструю загрузку страниц для всех пользователей.
           </p>
           <div className="mt-4">

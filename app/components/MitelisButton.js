@@ -26,7 +26,7 @@ export default function MitelisButton({ animationData }) {
 
   return (
     <a
-      href="https://mitelis.com"
+      href="https://mitelis.net"
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600/90 to-red-600/90 hover:from-orange-500 hover:to-red-500 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/50 backdrop-blur-sm group relative overflow-hidden"
@@ -46,7 +46,7 @@ export default function MitelisButton({ animationData }) {
             />
           </div>
         )}
-        <span className="text-lg pr-2">Узнать больше о mitelis.com</span>
+        <span className="text-lg pr-2">Узнать больше о mitelis.net</span>
       </div>
     </a>
   )
