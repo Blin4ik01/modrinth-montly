@@ -4,40 +4,22 @@ import { useEffect } from 'react'
 
 export default function AppSettingsSync() {
   useEffect(() => {
-    const handleGlobalClick = (e) => {
-      const anchor = e.target.closest('a')
-      if (!anchor) return
+    const { hostname } = window.location
 
-      const href = anchor.getAttribute('href')
-      if (!href) return
+    const handleClick = ({ target }) => {
+      const a = target.closest('a[href]')
+      if (!a || a.target) return
 
-      const isExternal = href.startsWith('http://') || href.startsWith('https://')
-      if (!isExternal) return
-
-      let isSameDomain = false
       try {
-        const url = new URL(href)
-        if (url.hostname === window.location.hostname) {
-          isSameDomain = true
+        if (new URL(a.href).hostname !== hostname) {
+          a.target = '_blank'
+          a.rel = 'noopener noreferrer'
         }
-      } catch (err) {}
-
-      if (isSameDomain) return
-
-      const isMarkdown = anchor.closest('.prose') || anchor.closest('.markdown-body') || anchor.closest('.markdown')
-      if (isMarkdown) return
-
-      const openInNewTab = localStorage.getItem('external-links-new-tab') !== 'false'
-      if (openInNewTab) {
-        anchor.setAttribute('target', '_blank')
-        anchor.setAttribute('rel', 'noopener noreferrer')
-      }
+      } catch {}
     }
 
-    document.addEventListener('click', handleGlobalClick)
-    return () => {
-      document.removeEventListener('click', handleGlobalClick)
-    }
+    document.addEventListener('click', handleClick, true)
+    return () => document.removeEventListener('click', handleClick, true)
   }, [])
 
   return null

@@ -34,7 +34,6 @@ export default function SettingsClient() {
   const [isResetting, setIsResetting] = useState(false)
   const [toggles, setToggles] = useState({
     'advanced-rendering': true,
-    'external-links-new-tab': true,
     'search-sidebar-right': false,
     'project-sidebar-left': false
   })
@@ -59,7 +58,6 @@ export default function SettingsClient() {
     const loadSettings = () => {
       const newToggles = {
         'advanced-rendering': localStorage.getItem('advanced-rendering') !== 'false',
-        'external-links-new-tab': localStorage.getItem('external-links-new-tab') !== 'false',
         'search-sidebar-right': localStorage.getItem('search-sidebar-right') === 'true',
         'project-sidebar-left': localStorage.getItem('project-sidebar-left') === 'true'
       }
@@ -242,29 +240,6 @@ export default function SettingsClient() {
             </StyledTooltip>
           </div>
 
-          {/* Open external links in new tab */}
-          <div className="flex flex-row flex-wrap items-center justify-between gap-4">
-            <label htmlFor="external-links-new-tab" className="flex-1 cursor-pointer select-none">
-              <span className="block font-semibold text-white text-sm md:text-base">Внешние ссылки в новой вкладке</span>
-              <span className="text-gray-400 text-xs md:text-sm">Настроить открытие внешних ссылок (ведущих за пределы сайта) in новой вкладке. Независимо от этой настройки, ссылки на одном домене и в описаниях Markdown всегда будут открываться in текущей вкладке.</span>
-            </label>
-            <StyledTooltip label={toggles['external-links-new-tab'] ? 'Включено' : 'Выключено'}>
-              <button
-                id="external-links-new-tab"
-                type="button"
-                role="switch"
-                aria-checked={toggles['external-links-new-tab']}
-                onClick={() => handleToggle('external-links-new-tab')}
-                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['external-links-new-tab'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
-              >
-                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
-                  toggles['external-links-new-tab'] 
-                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
-                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
-                }`} />
-              </button>
-            </StyledTooltip>
-          </div>
 
           {/* Right-aligned filters sidebar */}
           <div className="flex flex-row flex-wrap items-center justify-between gap-4">
@@ -398,7 +373,7 @@ export default function SettingsClient() {
           disabled={isResetting}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="px-5 py-2.5 bg-gradient-to-r from-[#fbcfe8] to-[#f3e8ff] hover:from-[#f9a8d4] hover:to-[#e9d5ff] dark:from-[#271620]/80 dark:to-[#1e1c25]/80 dark:hover:from-[#3c1f30]/80 dark:hover:to-[#2b2736]/80 text-[#b8326a] hover:text-[#9c1c50] dark:text-[#ec7fab] dark:hover:text-[#ff9bb5] font-bold rounded-xl text-sm transition-all duration-500 ease-in-out flex items-center gap-2.5 hover:shadow-[0_0_15px_rgba(236,127,171,0.35)] dark:hover:shadow-[0_0_15px_rgba(236,127,171,0.25)] active:scale-[0.97] cursor-pointer disabled:opacity-50 select-none"
+          className="px-5 py-2.5 bg-gradient-to-r from-[#fbcfe8] to-[#f3e8ff] hover:from-[#f9a8d4] hover:to-[#e9d5ff] dark:from-[#4a1e30] dark:to-[#32263f] dark:hover:from-[#5c2438] dark:hover:to-[#3d2e4e] text-[#b8326a] hover:text-[#9c1c50] dark:text-[#ec7fab] dark:hover:text-[#ff9bb5] font-bold rounded-xl text-sm transition-all duration-500 ease-in-out flex items-center gap-2.5 hover:shadow-[0_0_15px_rgba(236,127,171,0.35)] dark:hover:shadow-[0_0_15px_rgba(236,127,171,0.25)] active:scale-[0.97] cursor-pointer disabled:opacity-50 select-none"
         >
           {isResetting ? (
             <>
