@@ -23,7 +23,7 @@ export default function ContentNavigation({
   )
   /** В светлой теме не тонируем nav цветами проекта (инлайн-стили портят светлый вид). */
   const effectiveAccent =
-    mounted && accent && resolvedTheme === 'dark' ? accent : null
+    accent && (!mounted || resolvedTheme === 'dark') ? accent : null
 
   const isActive = (path) => {
     if (path === `/${contentType}/${slug}`) {
