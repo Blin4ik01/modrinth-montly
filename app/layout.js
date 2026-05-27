@@ -53,9 +53,9 @@ const POSTERITY_COMMENT_BODY = ` _    _
    ~~  ~~  ~~`
 
 export default function RootLayout({ children }) {
-  const activeColorPalettesStore = {}
+  const activeColorPalettesStoreNew = {}
   for (const key of Object.keys(PALETTES)) {
-    activeColorPalettesStore[key] = PALETTES[key].variables
+    activeColorPalettesStoreNew[key] = PALETTES[key].variables
   }
 
   return (
@@ -76,7 +76,7 @@ export default function RootLayout({ children }) {
                 }
                 (function() {
                   var p = localStorage.getItem('color-palette') || 'pink';
-                  var m = ${JSON.stringify(activeColorPalettesStore)};
+                  var m = ${JSON.stringify(activeColorPalettesStoreNew)};
                   var v = m[p] || m.pink;
                   for (var k in v) {
                     document.documentElement.style.setProperty(k, v[k]);

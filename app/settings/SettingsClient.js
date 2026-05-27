@@ -224,24 +224,70 @@ export default function SettingsClient() {
       <section className="universal-card" aria-labelledby="color-palette-heading">
         <h2 id="color-palette-heading" className="text-xl font-bold text-white mb-1">Акцентный цвет</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">Выберите основной акцентный цвет интерфейса.</p>
-        <div className="flex flex-wrap justify-center gap-4">
-          {Object.values(PALETTES).map(palette => {
+        <div className="flex flex-wrap justify-center gap-4 mt-4">
+          {Object.values(PALETTES).map((palette, index) => {
             const isSelected = activePalette === palette.id
             return (
               <button
                 key={palette.id}
                 onClick={() => handlePaletteChange(palette.id)}
-                className={`flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-300 select-none ${
-                  isSelected 
-                    ? 'border-modrinth-green bg-modrinth-green/10 text-white shadow-[0_0_15px_rgba(var(--color-green-rgb),0.15)] scale-[1.02]'
-                    : 'border-gray-800 bg-modrinth-dark text-gray-400 hover:border-gray-700 hover:text-white hover:scale-[1.02]'
-                }`}
+                className={`preview-radio ${isSelected ? 'selected' : ''} w-[calc(50%-8px)] sm:w-[180px] lg:w-[190px]`}
+                style={{
+                  borderColor: isSelected ? palette.variables['--color-green'] : undefined,
+                  boxShadow: isSelected ? `0 0 12px rgba(${palette.variables['--color-green-rgb']}, 0.12)` : undefined
+                }}
               >
-                <div 
-                  className="w-4 h-4 rounded-full border border-white/10" 
-                  style={{ backgroundColor: palette.variables['--color-green'] }} 
-                />
-                <span className="font-bold text-sm">{palette.name}</span>
+                <div className="preview">
+                  <div 
+                    className="example-card flex flex-col gap-1.5 p-2 rounded-lg border transition-all duration-300"
+                    style={{
+                      width: '7rem',
+                      height: '4.5rem',
+                      backgroundColor: 'var(--bg-secondary)',
+                      borderColor: isSelected ? palette.variables['--color-green'] : 'var(--border-color)'
+                    }}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <div 
+                        className="w-2.5 h-2.5 rounded-full shrink-0" 
+                        style={{ backgroundColor: palette.variables['--color-green'] }} 
+                      />
+                      <div className="w-10 h-1 bg-gray-500/30 rounded-sm shrink-0" />
+                    </div>
+                    <div className="flex-1 rounded border border-gray-700/20 bg-gray-800/10 p-1 flex flex-col justify-between">
+                      <div className="w-12 h-1 bg-gray-500/20 rounded-sm" />
+                      <div 
+                        className="w-full h-2.5 rounded-sm" 
+                        style={{ 
+                          background: `linear-gradient(135deg, ${palette.variables['--color-green']}, ${palette.variables['--color-green-light']})` 
+                        }} 
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="label">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="18" 
+                    height="18" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    className="radio shrink-0"
+                    style={{ color: isSelected ? palette.variables['--color-green'] : undefined }}
+                  >
+                    {isSelected ? (
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="5" fill="currentColor" />
+                      </>
+                    ) : (
+                      <circle cx="12" cy="12" r="10" />
+                    )}
+                  </svg>
+                  <span className="truncate">{palette.name}</span>
+                </div>
               </button>
             )
           })}
