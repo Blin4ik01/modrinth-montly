@@ -18,7 +18,7 @@ export default function EmailCopyButton({ email }) {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-b from-transparent via-transparent to-transparent hover:from-modrinth-green/10 hover:via-purple-600/10 hover:to-modrinth-green/10 rounded-lg transition-all duration-300 group"
+      className="inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-b from-transparent via-transparent to-transparent hover:from-modrinth-green/10 hover:via-modrinth-green-light/10 hover:to-modrinth-green/10 rounded-lg transition-all duration-300 group"
       title="Скопировать email в буфер обмена"
     >
       <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

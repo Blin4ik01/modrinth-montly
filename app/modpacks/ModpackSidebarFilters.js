@@ -159,14 +159,9 @@ export default function ModpackSidebarFilters({ isMobile = false, onFilterChange
                   onClick={() => toggleCategory(cat.id)}
                   className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                     isSelected
-                      ? 'text-white hover:brightness-125'
+                      ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                       : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
                   }`}
-                  style={
-                    isSelected
-                      ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                      : undefined
-                  }
                 >
                   <div className="h-4 w-4">{cat.icon}</div>
                   <span className="truncate text-sm flex-1">{cat.name}</span>
@@ -192,14 +187,9 @@ export default function ModpackSidebarFilters({ isMobile = false, onFilterChange
               }}
               className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                 environment === 'client'
-                  ? 'text-white hover:brightness-125'
+                  ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                   : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
               }`}
-              style={
-                environment === 'client'
-                  ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                  : undefined
-              }
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2"/>
@@ -219,14 +209,9 @@ export default function ModpackSidebarFilters({ isMobile = false, onFilterChange
               }}
               className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                 environment === 'server'
-                  ? 'text-white hover:brightness-125'
+                  ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                   : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
               }`}
-              style={
-                environment === 'server'
-                  ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                  : undefined
-              }
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
                 <path d="M22 12H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11M6 16h.01M10 16h.01"/>
@@ -334,14 +319,9 @@ export default function ModpackSidebarFilters({ isMobile = false, onFilterChange
                   onClick={() => toggleLoader(loader.id)}
                   className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                     isSelected
-                      ? 'text-white hover:brightness-125'
+                      ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                       : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
                   }`}
-                  style={
-                    isSelected
-                      ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                      : undefined
-                  }
                 >
                   <div className="h-4 w-4">{loader.icon}</div>
                   <span className="truncate text-sm flex-1">{loader.name}</span>
@@ -366,14 +346,9 @@ export default function ModpackSidebarFilters({ isMobile = false, onFilterChange
             }}
             className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               openSource
-                ? 'text-white hover:brightness-125'
+                ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                 : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
             }`}
-            style={
-              openSource
-                ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                : undefined
-            }
           >
             <span className="truncate text-sm flex-1">Открытый исходный код</span>
             {openSource && (

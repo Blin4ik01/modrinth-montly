@@ -1,9 +1,19 @@
 'use client'
 
 import { useEffect } from 'react'
+import { applyPalette } from '../../lib/paletteManager'
 
 export default function AppSettingsSync() {
   useEffect(() => {
+    const palette = localStorage.getItem('color-palette') || 'pink'
+    applyPalette(palette)
+
+    const handlePaletteChange = (e) => {
+      applyPalette(e.detail)
+    }
+
+    window.addEventListener('color-palette-changed', handlePaletteChange)
+
     const { hostname } = window.location
 
     const handleClick = ({ target }) => {
@@ -19,7 +29,10 @@ export default function AppSettingsSync() {
     }
 
     document.addEventListener('click', handleClick, true)
-    return () => document.removeEventListener('click', handleClick, true)
+    return () => {
+      window.removeEventListener('color-palette-changed', handlePaletteChange)
+      document.removeEventListener('click', handleClick, true)
+    }
   }, [])
 
   return null

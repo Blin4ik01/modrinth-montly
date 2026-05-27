@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes'
 import StyledTooltip from '../components/StyledTooltip'
 import Lottie from 'lottie-react'
 import fixAnimation from '@/public/animations/fix.json'
+import { PALETTES } from '../../lib/paletteManager'
 
 const DEFAULT_LAYOUTS = {
   mods: 'rows',
@@ -32,6 +33,7 @@ export default function SettingsClient() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
+  const [activePalette, setActivePalette] = useState('pink')
   const [toggles, setToggles] = useState({
     'advanced-rendering': true,
     'search-sidebar-right': false,
@@ -69,6 +71,8 @@ export default function SettingsClient() {
           setLayouts({ ...DEFAULT_LAYOUTS, ...JSON.parse(savedLayouts) })
         } catch (e) {}
       }
+      const savedPalette = localStorage.getItem('color-palette') || 'pink'
+      setActivePalette(savedPalette)
     }
 
     loadSettings()
@@ -99,6 +103,12 @@ export default function SettingsClient() {
     localStorage.setItem('project-list-layouts', JSON.stringify(newLayouts))
 
     window.dispatchEvent(new Event('layout-settings-changed'))
+  }
+
+  const handlePaletteChange = (paletteId) => {
+    setActivePalette(paletteId)
+    localStorage.setItem('color-palette', paletteId)
+    window.dispatchEvent(new CustomEvent('color-palette-changed', { detail: paletteId }))
   }
 
   const handleResetAll = () => {
@@ -211,6 +221,33 @@ export default function SettingsClient() {
         </div>
       </section>
 
+      <section className="universal-card" aria-labelledby="color-palette-heading">
+        <h2 id="color-palette-heading" className="text-xl font-bold text-white mb-1">Акцентный цвет</h2>
+        <p className="text-gray-400 mb-6 text-xs md:text-sm">Выберите основной акцентный цвет интерфейса.</p>
+        <div className="flex flex-wrap justify-center gap-4">
+          {Object.values(PALETTES).map(palette => {
+            const isSelected = activePalette === palette.id
+            return (
+              <button
+                key={palette.id}
+                onClick={() => handlePaletteChange(palette.id)}
+                className={`flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-300 select-none ${
+                  isSelected 
+                    ? 'border-modrinth-green bg-modrinth-green/10 text-white shadow-[0_0_15px_rgba(var(--color-green-rgb),0.15)] scale-[1.02]'
+                    : 'border-gray-800 bg-modrinth-dark text-gray-400 hover:border-gray-700 hover:text-white hover:scale-[1.02]'
+                }`}
+              >
+                <div 
+                  className="w-4 h-4 rounded-full border border-white/10" 
+                  style={{ backgroundColor: palette.variables['--color-green'] }} 
+                />
+                <span className="font-bold text-sm">{palette.name}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
       <section className="universal-card" aria-labelledby="toggle-features-heading">
         <h2 id="toggle-features-heading" className="text-xl font-bold text-white mb-1">Настройка функций</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">Включение или отключение определенных функций на этом устройстве.</p>
@@ -229,7 +266,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['advanced-rendering']}
                 onClick={() => handleToggle('advanced-rendering')}
-                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['advanced-rendering'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['advanced-rendering'] ? 'switch-active-bg' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['advanced-rendering'] 
@@ -241,7 +278,6 @@ export default function SettingsClient() {
           </div>
 
 
-          {/* Right-aligned filters sidebar */}
           <div className="flex flex-row flex-wrap items-center justify-between gap-4">
             <label htmlFor="search-layout-toggle" className="flex-1 cursor-pointer select-none">
               <span className="block font-semibold text-white text-sm md:text-base">Панель фильтров поиска справа</span>
@@ -254,7 +290,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['search-sidebar-right']}
                 onClick={() => handleToggle('search-sidebar-right')}
-                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['search-sidebar-right'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['search-sidebar-right'] ? 'switch-active-bg' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['search-sidebar-right'] 
@@ -265,7 +301,6 @@ export default function SettingsClient() {
             </StyledTooltip>
           </div>
 
-          {/* Left-aligned sidebar on content pages */}
           <div className="flex flex-row flex-wrap items-center justify-between gap-4">
             <label htmlFor="project-layout-toggle" className="flex-1 cursor-pointer select-none">
               <span className="block font-semibold text-white text-sm md:text-base">Боковая панель контента слева</span>
@@ -278,7 +313,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['project-sidebar-left']}
                 onClick={() => handleToggle('project-sidebar-left')}
-                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['project-sidebar-left'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['project-sidebar-left'] ? 'switch-active-bg' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['project-sidebar-left'] 
@@ -373,11 +408,11 @@ export default function SettingsClient() {
           disabled={isResetting}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="px-5 py-2.5 bg-gradient-to-r from-[#fbcfe8] to-[#f3e8ff] hover:from-[#f9a8d4] hover:to-[#e9d5ff] dark:from-[#4a1e30] dark:to-[#32263f] dark:hover:from-[#5c2438] dark:hover:to-[#3d2e4e] text-[#b8326a] hover:text-[#9c1c50] dark:text-[#ec7fab] dark:hover:text-[#ff9bb5] font-bold rounded-xl text-sm transition-all duration-500 ease-in-out flex items-center gap-2.5 hover:shadow-[0_0_15px_rgba(236,127,171,0.35)] dark:hover:shadow-[0_0_15px_rgba(236,127,171,0.25)] active:scale-[0.97] cursor-pointer disabled:opacity-50 select-none"
+          className="px-5 py-2.5 bg-gradient-to-r from-modrinth-green/15 to-modrinth-green-light/15 hover:from-modrinth-green/25 hover:to-modrinth-green-light/25 dark:from-modrinth-green/20 dark:to-modrinth-green-light/20 dark:hover:from-modrinth-green/30 dark:hover:to-modrinth-green-light/30 text-modrinth-green hover:brightness-110 font-bold rounded-xl text-sm transition-all duration-500 ease-in-out flex items-center gap-2.5 hover:shadow-[0_0_15px_rgba(var(--color-green-rgb),0.35)] dark:hover:shadow-[0_0_15px_rgba(var(--color-green-rgb),0.25)] active:scale-[0.97] cursor-pointer disabled:opacity-50 select-none"
         >
           {isResetting ? (
             <>
-              <svg className="animate-spin h-4 w-4 text-[#b8326a] dark:text-[#ec7fab]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-4 w-4 text-modrinth-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>

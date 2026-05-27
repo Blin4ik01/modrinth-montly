@@ -13,6 +13,7 @@ import VersionsPreloader from './components/VersionsPreloader'
 import AppTooltipProvider from './components/AppTooltipProvider'
 import ExtensionBanner from './components/ExtensionBanner'
 import AppSettingsSync from './components/AppSettingsSync'
+import { PALETTES } from '../lib/paletteManager'
 
 const nunito = Nunito({
   subsets: ['latin', 'cyrillic'],
@@ -28,26 +29,23 @@ export const metadata = {
   title: 'ModrinthProxy',
   description: 'Удобный поиск и скачивание модов, плагинов, шейдеров для Minecraft на русском языке',
   manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'ModrinthProxy'
+  themeColor: '#ec7fab',
+  icons: {
+    icon: '/icon.png?v=2',
+    apple: '/icon.png?v=2',
   },
-  verification: {
-    yandex: '63b445e8cd86247b'
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: 'no',
+    viewportFit: 'cover'
   }
-}
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  themeColor: '#1bd96a'
 }
 
 const POSTERITY_COMMENT_BODY = ` _    _ 
     (o)--(o)      
-   /\.______\\.       
+   /\.______\.       
    \\________/     
   ./        \\.    
  ( .        , )
@@ -55,6 +53,11 @@ const POSTERITY_COMMENT_BODY = ` _    _
    ~~  ~~  ~~`
 
 export default function RootLayout({ children }) {
+  const activeColorPalettesStore = {}
+  for (const key of Object.keys(PALETTES)) {
+    activeColorPalettesStore[key] = PALETTES[key].variables
+  }
+
   return (
     <html lang="ru" className={`scroll-smooth ${nunito.variable}`} suppressHydrationWarning>
       <head>
@@ -71,6 +74,14 @@ export default function RootLayout({ children }) {
                 if (localStorage.getItem('project-sidebar-left') === 'true') {
                   document.documentElement.classList.add('project-sidebar-left');
                 }
+                (function() {
+                  var p = localStorage.getItem('color-palette') || 'pink';
+                  var m = ${JSON.stringify(activeColorPalettesStore)};
+                  var v = m[p] || m.pink;
+                  for (var k in v) {
+                    document.documentElement.style.setProperty(k, v[k]);
+                  }
+                })();
               } catch (e) {}
             `
           }}

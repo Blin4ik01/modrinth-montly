@@ -175,14 +175,9 @@ export default function PluginSidebarFilters({ isMobile = false, onFilterChange,
                   onClick={() => toggleCategory(cat.id)}
                   className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                     isSelected
-                      ? 'text-white hover:brightness-125'
+                      ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                       : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
                   }`}
-                  style={
-                    isSelected
-                          ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                          : undefined
-                    }
                   >
                   <div className="h-4 w-4">{cat.icon}</div>
                   <span className="truncate text-sm flex-1">{cat.name}</span>
@@ -290,14 +285,9 @@ export default function PluginSidebarFilters({ isMobile = false, onFilterChange,
                   onClick={() => toggleLoader(loader.id)}
                   className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                     isSelected
-                      ? 'text-white hover:brightness-125'
+                      ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                       : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
                   }`}
-                  style={
-                    isSelected
-                      ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                      : undefined
-                  }
                 >
                   <div className="h-4 w-4">{loader.icon}</div>
                   <span className="truncate text-sm flex-1">{loader.name}</span>
@@ -324,14 +314,9 @@ export default function PluginSidebarFilters({ isMobile = false, onFilterChange,
                   onClick={() => togglePlatform(platform.id)}
                   className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
                     isSelected
-                      ? 'text-white hover:brightness-125'
+                      ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                       : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
                   }`}
-                  style={
-                    isSelected
-                      ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                      : undefined
-                  }
                 >
                   <div className="h-4 w-4">{platform.icon}</div>
                   <span className="truncate text-sm flex-1">{platform.name}</span>
@@ -356,14 +341,9 @@ export default function PluginSidebarFilters({ isMobile = false, onFilterChange,
             }}
             className={`w-full text-left px-2 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               openSource
-                ? 'text-white hover:brightness-125'
+                ? 'text-white hover:brightness-125 bg-modrinth-green/25'
                 : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'
             }`}
-            style={
-              openSource
-                ? { backgroundColor: 'rgba(236, 127, 171, 0.25)' }
-                : undefined
-            }
           >
             <span className="truncate text-sm flex-1">Открытый исходный код</span>
             {openSource && (

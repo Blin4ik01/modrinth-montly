@@ -120,7 +120,9 @@
   --scrollbar-hover: #6b7280;
   --shadow-color: #393d5e;
   --color-green: #ec7fab;
-  --color-green-hover: #f08fbb;
+  --color-green-hover-light: #e0659f;
+  --color-green-hover-dark: #f08fbb;
+  --color-green-hover: var(--color-green-hover-dark);
   --color-green-rgb: 236, 127, 171;
   --color-green-bright: #e0659f;
   --color-green-light: #c16fff;
@@ -135,12 +137,12 @@
   --text-link: #999999;
   --text-subdued: #666666;
   --landing-border-color: rgba(168, 177, 221, .55);
-  --glow-color-0: rgba(236, 127, 171, 0.92);
+  --glow-color-0: rgba(var(--color-green-rgb), 0.92);
   --glow-color-1: rgba(59, 130, 246, 0.9);
   --glow-color-2: rgba(168, 85, 247, 0.9);
   --glow-color-3: rgba(236, 72, 153, 0.9);
   --glow-color-4: rgba(251, 146, 60, 0.9);
-  --glow-color-5: rgba(193, 111, 255, 0.9);
+  --glow-color-5: rgba(var(--color-green-light-rgb), 0.9);
   --glow-color-6: rgba(99, 102, 241, 0.9);
   --glow-color-7: rgba(219, 39, 119, 0.9);
 }
@@ -168,7 +170,9 @@ html:not(.dark) {
   --scrollbar-hover: #868e96;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --color-green: #ec7fab;
-  --color-green-hover: #e0659f;
+  --color-green-hover-light: #e0659f;
+  --color-green-hover-dark: #f08fbb;
+  --color-green-hover: var(--color-green-hover-light);
   --color-green-rgb: 236, 127, 171;
   --color-green-bright: #e0659f;
   --color-green-light: #c16fff;
@@ -183,12 +187,12 @@ html:not(.dark) {
   --text-link: #495057;
   --text-subdued: #868e96;
   --landing-border-color: rgba(107, 114, 128, 0.3);
-  --glow-color-0: rgba(236, 127, 171, 0.6);
+  --glow-color-0: rgba(var(--color-green-rgb), 0.6);
   --glow-color-1: rgba(59, 130, 246, 0.6);
   --glow-color-2: rgba(168, 85, 247, 0.6);
   --glow-color-3: rgba(236, 72, 153, 0.6);
   --glow-color-4: rgba(251, 146, 60, 0.6);
-  --glow-color-5: rgba(193, 111, 255, 0.6);
+  --glow-color-5: rgba(var(--color-green-light-rgb), 0.6);
   --glow-color-6: rgba(99, 102, 241, 0.6);
   --glow-color-7: rgba(219, 39, 119, 0.6);
 }
@@ -1468,7 +1472,7 @@ select:focus {
   background-color: var(--bg-secondary) !important;
   border-color: var(--color-green) !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(236, 127, 171, 0.1) !important;
+  box-shadow: 0 0 0 2px rgba(var(--color-green-rgb), 0.1) !important;
 }
 
 input[type="text"]::placeholder,
@@ -1548,10 +1552,10 @@ input[type="url"]:-webkit-autofill {
 
 @keyframes letter-glow {
   0%, 100% {
-    text-shadow: 0 0 10px rgba(236, 127, 171, 0.5), 0 0 20px rgba(236, 127, 171, 0.3);
+    text-shadow: 0 0 10px rgba(var(--color-green-rgb), 0.5), 0 0 20px rgba(var(--color-green-rgb), 0.3);
   }
   50% {
-    text-shadow: 0 0 20px rgba(236, 127, 171, 0.8), 0 0 30px rgba(236, 127, 171, 0.5), 0 0 40px rgba(236, 127, 171, 0.3);
+    text-shadow: 0 0 20px rgba(var(--color-green-rgb), 0.8), 0 0 30px rgba(var(--color-green-rgb), 0.5), 0 0 40px rgba(var(--color-green-rgb), 0.3);
   }
 }
 
@@ -2061,4 +2065,51 @@ html.no-advanced-rendering .nav-indicator {
 
 .theme-options .preview.system-mode .example-text-2 {
   background: linear-gradient(90deg, #cbd5e1 50%, #374151 50%) !important;
+}
+
+button svg *[stroke="rgb(235,127,171)"],
+button svg *[stroke="rgb(236,127,171)"],
+button svg *[stroke="#ec7fab"] {
+  stroke: var(--color-green) !important;
+}
+
+button svg *[fill="rgb(235,127,171)"],
+button svg *[fill="rgb(236,127,171)"],
+button svg *[fill="#ec7fab"] {
+  fill: var(--color-green) !important;
+}
+
+.logo-icon {
+  background-color: var(--color-green);
+  -webkit-mask: url('/icon.png?v=2') no-repeat center / contain;
+  mask: url('/icon.png?v=2') no-repeat center / contain;
+  filter: drop-shadow(0 0 8px rgba(var(--color-green-rgb), 0.5));
+}
+
+.group:hover .logo-icon {
+  filter: drop-shadow(0 0 12px rgba(var(--color-green-rgb), 0.7));
+}
+
+.logo-icon.animate-spin {
+  filter: drop-shadow(0 0 12px rgba(var(--color-green-rgb), 0.7));
+}
+
+.minecraft-players-badge {
+  background-image: linear-gradient(to right, rgba(var(--color-green-rgb), 0.15), rgba(var(--color-green-light-rgb), 0.15));
+  border-color: rgba(var(--color-green-rgb), 0.25);
+  color: var(--color-green-hover-light);
+}
+
+:is(.dark *) .minecraft-players-badge {
+  background-image: linear-gradient(to right, rgba(var(--color-green-rgb), 0.2), rgba(var(--color-green-light-rgb), 0.2));
+  border-color: transparent;
+  color: var(--color-green-bright);
+}
+
+.switch-active-bg {
+  background-color: rgba(var(--color-green-rgb), 0.22) !important;
+}
+
+:is(.dark *) .switch-active-bg {
+  background-color: rgba(var(--color-green-rgb), 0.18) !important;
 }

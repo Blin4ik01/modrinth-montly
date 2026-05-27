@@ -217,7 +217,7 @@ export default async function NewsPage() {
 
         <div className="mt-12 text-center">
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gradient-to-r from-modrinth-green/30 to-blue-500/30 blur-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-modrinth-green/30 to-modrinth-green-light/30 blur-2xl"></div>
             <Link
               href="https://github.com/b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0/modrinth-proxy"
               target="_blank"
