@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const EXTERNAL_LINKS = [
   {
@@ -40,6 +41,8 @@ const ROT_MS = 300
 const PANEL_MS = 420
 
 export default function TopNav() {
+  const pathname = usePathname()
+  const isSettings = pathname === '/settings'
   const panelId = useId()
   const timersRef = useRef([])
 
@@ -180,7 +183,11 @@ export default function TopNav() {
             </button>
              <Link
               href="/settings"
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-800/40 rounded-xl transition-colors flex items-center justify-center"
+              className={`p-2 rounded-xl transition-colors flex items-center justify-center ${
+                isSettings 
+                  ? 'text-[var(--color-green)] bg-gray-800/40' 
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800/40'
+              }`}
               title="Настройки"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-5 h-5">
@@ -237,7 +244,11 @@ export default function TopNav() {
         <div className="hidden md:flex flex-row items-center gap-2 flex-shrink-0">
           <Link
             href="/settings"
-            className="p-2 text-gray-400 hover:text-white hover:bg-gray-800/40 rounded-xl transition-colors flex items-center justify-center"
+            className={`p-2 rounded-xl transition-colors flex items-center justify-center ${
+              isSettings 
+                ? 'text-[var(--color-green)] bg-gray-800/40' 
+                : 'text-gray-400 hover:text-white hover:bg-gray-800/40'
+            }`}
             title="Настройки"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" className="w-5 h-5">

@@ -1966,6 +1966,10 @@ html.no-advanced-rendering [data-project-backdrop] {
   display: none !important;
 }
 
+html.no-advanced-rendering .nav-indicator {
+  display: none !important;
+}
+
 /* Color Theme Customizations */
 .theme-options {
   display: grid;

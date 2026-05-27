@@ -112,7 +112,7 @@ export default function Navigation() {
   return (
     <div ref={navRef} className="hidden lg:flex items-center gap-0.5 md:gap-1 flex-1 relative">
       <div 
-        className={`absolute rounded-lg bg-gradient-to-r pointer-events-none ${getGradientClass(indicator.color)} ${hasAnimated ? 'transition-all duration-700 ease-out' : ''}`}
+        className={`nav-indicator absolute rounded-lg bg-gradient-to-r pointer-events-none ${getGradientClass(indicator.color)} ${hasAnimated ? 'transition-all duration-700 ease-out' : ''}`}
         style={{
           left: `${indicator.left}px`,
           width: `${indicator.width}px`,
