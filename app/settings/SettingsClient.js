@@ -231,7 +231,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['advanced-rendering']}
                 onClick={() => handleToggle('advanced-rendering')}
-                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['advanced-rendering'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['advanced-rendering'] 
@@ -255,7 +255,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['external-links-new-tab']}
                 onClick={() => handleToggle('external-links-new-tab')}
-                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['external-links-new-tab'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['external-links-new-tab'] 
@@ -279,7 +279,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['search-sidebar-right']}
                 onClick={() => handleToggle('search-sidebar-right')}
-                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['search-sidebar-right'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['search-sidebar-right'] 
@@ -303,7 +303,7 @@ export default function SettingsClient() {
                 role="switch"
                 aria-checked={toggles['project-sidebar-left']}
                 onClick={() => handleToggle('project-sidebar-left')}
-                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['project-sidebar-left'] ? 'bg-[rgba(236,127,171,0.22)] dark:bg-[rgba(236,127,171,0.18)]' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['project-sidebar-left'] 
