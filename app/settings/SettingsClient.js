@@ -1,7 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'next-themes'
+import StyledTooltip from '../components/StyledTooltip'
+import Lottie from 'lottie-react'
+import fixAnimation from '@/public/animations/fix.json'
 
 const DEFAULT_LAYOUTS = {
   mods: 'rows',
@@ -37,6 +40,20 @@ export default function SettingsClient() {
   })
   
   const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS)
+
+  const lottieRef = useRef(null)
+
+  const handleMouseEnter = () => {
+    if (lottieRef.current) {
+      lottieRef.current.play()
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (lottieRef.current) {
+      lottieRef.current.stop()
+    }
+  }
 
   useEffect(() => {
     const loadSettings = () => {
@@ -207,46 +224,46 @@ export default function SettingsClient() {
               <span className="block font-semibold text-white text-sm md:text-base">Визуальные эффекты</span>
               <span className="text-gray-400 text-xs md:text-sm">Включает размытие меню и фоновые изображения на страницах проектов. Отключите для ускорения работы сайта на слабых устройствах.</span>
             </label>
-            <button
-              id="advanced-rendering"
-              type="button"
-              role="switch"
-              aria-checked={toggles['advanced-rendering']}
-              onClick={() => handleToggle('advanced-rendering')}
-              className={`group inline-flex shrink-0 items-center rounded-full m-0 p-1 transition-all duration-200 cursor-pointer border-none h-6 !w-[48px] ${
-                toggles['advanced-rendering'] ? 'bg-modrinth-green' : 'bg-[#ced4da] dark:bg-[#2a2d32]'
-              }`}
-            >
-              <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
-                toggles['advanced-rendering'] 
-                  ? 'translate-x-[24px] bg-white dark:bg-[#111111] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
-                  : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
-              }`} />
-            </button>
+            <StyledTooltip label={toggles['advanced-rendering'] ? 'Включено' : 'Выключено'}>
+              <button
+                id="advanced-rendering"
+                type="button"
+                role="switch"
+                aria-checked={toggles['advanced-rendering']}
+                onClick={() => handleToggle('advanced-rendering')}
+                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+              >
+                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
+                  toggles['advanced-rendering'] 
+                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
+                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
+                }`} />
+              </button>
+            </StyledTooltip>
           </div>
 
           {/* Open external links in new tab */}
           <div className="flex flex-row flex-wrap items-center justify-between gap-4">
             <label htmlFor="external-links-new-tab" className="flex-1 cursor-pointer select-none">
               <span className="block font-semibold text-white text-sm md:text-base">Внешние ссылки в новой вкладке</span>
-              <span className="text-gray-400 text-xs md:text-sm">Настроить открытие внешних ссылок (ведущих за пределы сайта) в новой вкладке. Независимо от этой настройки, ссылки на одном домене и в описаниях Markdown всегда будут открываться в текущей вкладке.</span>
+              <span className="text-gray-400 text-xs md:text-sm">Настроить открытие внешних ссылок (ведущих за пределы сайта) in новой вкладке. Независимо от этой настройки, ссылки на одном домене и в описаниях Markdown всегда будут открываться in текущей вкладке.</span>
             </label>
-            <button
-              id="external-links-new-tab"
-              type="button"
-              role="switch"
-              aria-checked={toggles['external-links-new-tab']}
-              onClick={() => handleToggle('external-links-new-tab')}
-              className={`group inline-flex shrink-0 items-center rounded-full m-0 p-1 transition-all duration-200 cursor-pointer border-none h-6 !w-[48px] ${
-                toggles['external-links-new-tab'] ? 'bg-modrinth-green' : 'bg-[#ced4da] dark:bg-[#2a2d32]'
-              }`}
-            >
-              <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
-                toggles['external-links-new-tab'] 
-                  ? 'translate-x-[24px] bg-white dark:bg-[#111111] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
-                  : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
-              }`} />
-            </button>
+            <StyledTooltip label={toggles['external-links-new-tab'] ? 'Включено' : 'Выключено'}>
+              <button
+                id="external-links-new-tab"
+                type="button"
+                role="switch"
+                aria-checked={toggles['external-links-new-tab']}
+                onClick={() => handleToggle('external-links-new-tab')}
+                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+              >
+                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
+                  toggles['external-links-new-tab'] 
+                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
+                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
+                }`} />
+              </button>
+            </StyledTooltip>
           </div>
 
           {/* Right-aligned filters sidebar */}
@@ -255,22 +272,22 @@ export default function SettingsClient() {
               <span className="block font-semibold text-white text-sm md:text-base">Панель фильтров поиска справа</span>
               <span className="text-gray-400 text-xs md:text-sm">Отображать боковую панель фильтров справа от результатов поиска.</span>
             </label>
-            <button
-              id="search-layout-toggle"
-              type="button"
-              role="switch"
-              aria-checked={toggles['search-sidebar-right']}
-              onClick={() => handleToggle('search-sidebar-right')}
-              className={`group inline-flex shrink-0 items-center rounded-full m-0 p-1 transition-all duration-200 cursor-pointer border-none h-6 !w-[48px] ${
-                toggles['search-sidebar-right'] ? 'bg-modrinth-green' : 'bg-[#ced4da] dark:bg-[#2a2d32]'
-              }`}
-            >
-              <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
-                toggles['search-sidebar-right'] 
-                  ? 'translate-x-[24px] bg-white dark:bg-[#111111] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
-                  : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
-              }`} />
-            </button>
+            <StyledTooltip label={toggles['search-sidebar-right'] ? 'Включено' : 'Выключено'}>
+              <button
+                id="search-layout-toggle"
+                type="button"
+                role="switch"
+                aria-checked={toggles['search-sidebar-right']}
+                onClick={() => handleToggle('search-sidebar-right')}
+                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+              >
+                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
+                  toggles['search-sidebar-right'] 
+                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
+                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
+                }`} />
+              </button>
+            </StyledTooltip>
           </div>
 
           {/* Left-aligned sidebar on content pages */}
@@ -279,22 +296,22 @@ export default function SettingsClient() {
               <span className="block font-semibold text-white text-sm md:text-base">Боковая панель контента слева</span>
               <span className="text-gray-400 text-xs md:text-sm">Отображать боковую панель слева от основного описания проекта.</span>
             </label>
-            <button
-              id="project-layout-toggle"
-              type="button"
-              role="switch"
-              aria-checked={toggles['project-sidebar-left']}
-              onClick={() => handleToggle('project-sidebar-left')}
-              className={`group inline-flex shrink-0 items-center rounded-full m-0 p-1 transition-all duration-200 cursor-pointer border-none h-6 !w-[48px] ${
-                toggles['project-sidebar-left'] ? 'bg-modrinth-green' : 'bg-[#ced4da] dark:bg-[#2a2d32]'
-              }`}
-            >
-              <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
-                toggles['project-sidebar-left'] 
-                  ? 'translate-x-[24px] bg-white dark:bg-[#111111] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
-                  : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
-              }`} />
-            </button>
+            <StyledTooltip label={toggles['project-sidebar-left'] ? 'Включено' : 'Выключено'}>
+              <button
+                id="project-layout-toggle"
+                type="button"
+                role="switch"
+                aria-checked={toggles['project-sidebar-left']}
+                onClick={() => handleToggle('project-sidebar-left')}
+                className="group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] bg-[#ced4da] dark:bg-[#2a2d32] border-2 border-transparent"
+              >
+                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
+                  toggles['project-sidebar-left'] 
+                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
+                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
+                }`} />
+              </button>
+            </StyledTooltip>
           </div>
         </div>
       </section>
@@ -379,22 +396,30 @@ export default function SettingsClient() {
         <button
           onClick={handleResetAll}
           disabled={isResetting}
-          className="px-5 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-xl text-sm transition-all flex items-center gap-2 border border-gray-300 dark:border-gray-700 cursor-pointer disabled:opacity-50"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="px-5 py-2.5 bg-gradient-to-r from-[#fbcfe8] to-[#f3e8ff] hover:from-[#f9a8d4] hover:to-[#e9d5ff] dark:from-[#271620]/80 dark:to-[#1e1c25]/80 dark:hover:from-[#3c1f30]/80 dark:hover:to-[#2b2736]/80 text-[#b8326a] hover:text-[#9c1c50] dark:text-[#ec7fab] dark:hover:text-[#ff9bb5] font-bold rounded-xl text-sm transition-all duration-500 ease-in-out flex items-center gap-2.5 hover:shadow-[0_0_15px_rgba(236,127,171,0.35)] dark:hover:shadow-[0_0_15px_rgba(236,127,171,0.25)] active:scale-[0.97] cursor-pointer disabled:opacity-50 select-none"
         >
           {isResetting ? (
             <>
-              <svg className="animate-spin h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-4 w-4 text-[#b8326a] dark:text-[#ec7fab]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>Чиним всё...</span>
+              <span>Сбрасываем...</span>
             </>
           ) : (
             <>
-              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-              <span>Я всё сломал</span>
+              <div className="w-5 h-5 flex-shrink-0">
+                <Lottie
+                  lottieRef={lottieRef}
+                  animationData={fixAnimation}
+                  loop={true}
+                  autoplay={false}
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+              <span>Сбросить настройки</span>
             </>
           )}
         </button>
