@@ -124,6 +124,7 @@
   --color-green-rgb: 236, 127, 171;
   --color-green-bright: #e0659f;
   --color-green-light: #c16fff;
+  --color-green-light-rgb: 193, 111, 255;
   --color-download-link: #ec7fab;
   --color-blue-light: #a7d0ff;
   --text-primary: #ffffff;
@@ -171,6 +172,7 @@ html:not(.dark) {
   --color-green-rgb: 236, 127, 171;
   --color-green-bright: #e0659f;
   --color-green-light: #c16fff;
+  --color-green-light-rgb: 193, 111, 255;
   --color-download-link: #ec7fab;
   --color-blue-light: #3b82f6;
   --text-primary: #212529;

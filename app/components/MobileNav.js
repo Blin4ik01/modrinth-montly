@@ -10,13 +10,13 @@ export default function MobileNav({ onFilterClick }) {
   
   const isActive = (path) => {
     if (path === '/') return pathname === '/'
-    if (path === '/mods') return pathname.startsWith('/mods')
-    if (path === '/plugins') return pathname.startsWith('/plugins')
-    if (path === '/shaders') return pathname.startsWith('/shaders')
-    if (path === '/resourcepacks') return pathname.startsWith('/resourcepacks')
-    if (path === '/datapacks') return pathname.startsWith('/datapacks')
-    if (path === '/modpacks') return pathname.startsWith('/modpacks')
-    if (path === '/app') return pathname.startsWith('/app')
+    if (path === '/mods') return pathname.startsWith('/mods') || pathname.startsWith('/discover/mods') || pathname.startsWith('/mod/')
+    if (path === '/plugins') return pathname.startsWith('/plugins') || pathname.startsWith('/discover/plugins') || pathname.startsWith('/plugin/')
+    if (path === '/shaders') return pathname.startsWith('/shaders') || pathname.startsWith('/discover/shaders') || pathname.startsWith('/shader/')
+    if (path === '/resourcepacks') return pathname.startsWith('/resourcepacks') || pathname.startsWith('/discover/resourcepacks') || pathname.startsWith('/resourcepack/')
+    if (path === '/datapacks') return pathname.startsWith('/datapacks') || pathname.startsWith('/discover/datapacks') || pathname.startsWith('/datapack/')
+    if (path === '/modpacks') return pathname.startsWith('/modpacks') || pathname.startsWith('/discover/modpacks') || pathname.startsWith('/modpack/')
+    if (path === '/app') return pathname.startsWith('/app') || pathname.startsWith('/launcher')
     if (path === '/news') return pathname.startsWith('/news')
     return false
   }

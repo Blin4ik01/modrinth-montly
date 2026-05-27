@@ -16,8 +16,8 @@ module.exports = {
         'version-beta-fg': '#ffa347',
         black: 'var(--bg-black)',
         modrinth: {
-          green: 'var(--color-green)',
-          'green-light': 'var(--color-green-light)',
+          green: 'rgba(var(--color-green-rgb), <alpha-value>)',
+          'green-light': 'rgba(var(--color-green-light-rgb), <alpha-value>)',
           dark: 'var(--bg-secondary)',
           darker: 'var(--bg-primary)',
           darkest: 'var(--bg-darker)',

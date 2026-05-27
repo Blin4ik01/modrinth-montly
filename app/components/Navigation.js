@@ -14,19 +14,38 @@ export default function Navigation() {
   const [hasAnimated, setHasAnimated] = useState(false)
 
   const getColorForPath = (path) => {
-    if (path.startsWith('/discover/mods') || path.startsWith('/mods')) return 'modrinth-green'
-    if (path.startsWith('/discover/resourcepacks') || path.startsWith('/resourcepacks')) return 'purple'
-    if (path.startsWith('/discover/datapacks') || path.startsWith('/datapacks')) return 'orange'
-    if (path.startsWith('/discover/shaders') || path.startsWith('/shaders')) return 'cyan'
-    if (path.startsWith('/discover/modpacks') || path.startsWith('/modpacks')) return 'red'
-    if (path.startsWith('/discover/plugins') || path.startsWith('/plugins')) return 'blue'
-    if (path.startsWith('/app')) return 'modrinth-green'
+    if (path.startsWith('/discover/mods') || path.startsWith('/mods') || path.startsWith('/mod/')) return 'modrinth-green'
+    if (path.startsWith('/discover/resourcepacks') || path.startsWith('/resourcepacks') || path.startsWith('/resourcepack/')) return 'purple'
+    if (path.startsWith('/discover/datapacks') || path.startsWith('/datapacks') || path.startsWith('/datapack/')) return 'orange'
+    if (path.startsWith('/discover/shaders') || path.startsWith('/shaders') || path.startsWith('/shader/')) return 'cyan'
+    if (path.startsWith('/discover/modpacks') || path.startsWith('/modpacks') || path.startsWith('/modpack/')) return 'red'
+    if (path.startsWith('/discover/plugins') || path.startsWith('/plugins') || path.startsWith('/plugin/')) return 'blue'
+    if (path.startsWith('/app') || path.startsWith('/launcher')) return 'emerald'
     if (path.startsWith('/news')) return 'yellow'
     return 'modrinth-green'
   }
 
   const isActive = (path) => {
     if (path === '/') return pathname === '/'
+    if (path === '/app') return pathname.startsWith('/app') || pathname.startsWith('/launcher')
+    if (path === '/discover/mods') {
+      return pathname.startsWith('/discover/mods') || pathname.startsWith('/mods') || pathname.startsWith('/mod/')
+    }
+    if (path === '/discover/resourcepacks') {
+      return pathname.startsWith('/discover/resourcepacks') || pathname.startsWith('/resourcepacks') || pathname.startsWith('/resourcepack/')
+    }
+    if (path === '/discover/datapacks') {
+      return pathname.startsWith('/discover/datapacks') || pathname.startsWith('/datapacks') || pathname.startsWith('/datapack/')
+    }
+    if (path === '/discover/shaders') {
+      return pathname.startsWith('/discover/shaders') || pathname.startsWith('/shaders') || pathname.startsWith('/shader/')
+    }
+    if (path === '/discover/modpacks') {
+      return pathname.startsWith('/discover/modpacks') || pathname.startsWith('/modpacks') || pathname.startsWith('/modpack/')
+    }
+    if (path === '/discover/plugins') {
+      return pathname.startsWith('/discover/plugins') || pathname.startsWith('/plugins') || pathname.startsWith('/plugin/')
+    }
     return pathname.startsWith(path)
   }
 

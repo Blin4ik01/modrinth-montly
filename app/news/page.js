@@ -133,12 +133,12 @@ export default async function NewsPage() {
       {commits.length > 0 && <MarkCommitsRead latestSha={commits[0].sha} />}
       <div className="max-w-6xl mx-auto">
         <header className="mb-6 md:mb-8">
-          <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-modrinth-green">
-            Обновления
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-            Новости
+          <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl uppercase">
+            Чё нового?
           </h1>
+          <h2 className="mt-2 mb-2 text-xs font-medium uppercase tracking-[0.2em] text-modrinth-green">
+            Место, где мы рассказываем как мы боримся с багами
+          </h2>
           <div className="mt-4 h-px w-full max-w-[4.5rem] bg-modrinth-green/80" aria-hidden />
           <div className="mt-4 flex flex-wrap items-stretch gap-3">
             <div className="flex shrink-0 items-center justify-center self-stretch rounded-md border border-gray-700 bg-gray-800/50 px-5 py-3 text-2xl font-black uppercase tracking-wide text-gray-200">
