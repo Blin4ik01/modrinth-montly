@@ -5,6 +5,7 @@ import Link from 'next/link'
 import StyledTooltip from './StyledTooltip'
 
 import { SERVER_REGIONS, SERVER_LANGUAGES } from '@/lib/serverCategories'
+import ServerGameVersionChips from './ServerGameVersionChips'
 
 const mapLanguage = (code) => {
   const lang = SERVER_LANGUAGES.find(l => l.id.toLowerCase() === code.toLowerCase())
@@ -24,10 +25,9 @@ const mapRegion = (region) => {
   return fallbackMapping[region.toLowerCase()] || region.toUpperCase()
 }
 
-export default function ServerSidebarDetails({ server, requiredContentVersion = null }) {
+function ServerAddressCopy({ address, tooltip }) {
   const [copied, setCopied] = useState(false)
-  const address = server.minecraft_java_server?.address || ''
-  
+
   const handleCopy = async () => {
     if (!address) return
     try {
@@ -39,39 +39,46 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
     }
   }
 
+  return (
+    <StyledTooltip label={copied ? 'Скопировано!' : tooltip}>
+      <button
+        onClick={handleCopy}
+        className="w-full bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 hover:border-modrinth-green/30 flex gap-2 justify-between rounded-xl items-center px-3 pr-1.5 h-12 cursor-pointer transition-all duration-300 active:scale-95 text-left group"
+      >
+        <span className="font-semibold text-white truncate text-sm">{address}</span>
+        <div className="w-8 h-8 rounded-lg bg-gray-900/40 flex items-center justify-center text-gray-400 group-hover:text-white transition-colors">
+          {copied ? (
+            <svg className="w-4 h-4 text-modrinth-green" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          )}
+        </div>
+      </button>
+    </StyledTooltip>
+  )
+}
+
+export default function ServerSidebarDetails({ server, requiredContentVersion = null }) {
+  const javaAddress = server.minecraft_java_server?.address?.trim() || ''
+  const bedrockAddress = server.minecraft_bedrock_server?.address?.trim() || ''
+
   const primaryFile = requiredContentVersion?.files?.find(f => f.primary) || requiredContentVersion?.files?.[0]
   const downloadUrl = primaryFile?.url
 
-  const gameVersions = server.minecraft_java_server?.content?.supported_game_versions || server.game_versions || []
+  const javaContent = server.minecraft_java_server?.content
+  const gameVersions = javaContent?.supported_game_versions || server.game_versions || []
+  const recommendedVersion = javaContent?.recommended_game_version || null
   const loaders = server.loaders || server.mrpack_loaders || []
 
   return (
     <div className="bg-modrinth-dark border border-gray-800 rounded-2xl p-4 flex flex-col gap-4 shadow-lg">
       <h2 className="text-lg font-bold text-white m-0">О сервере</h2>
       
-      {address && (
-        <StyledTooltip label={copied ? 'Скопировано!' : 'Скопировать IP сервера'}>
-          <button
-            onClick={handleCopy}
-            className="w-full bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 hover:border-modrinth-green/30 flex gap-2 justify-between rounded-xl items-center px-3 pr-1.5 h-12 cursor-pointer transition-all duration-300 active:scale-95 text-left group"
-          >
-            <span className="font-semibold text-white truncate text-sm">{address}</span>
-            <div className="w-8 h-8 rounded-lg bg-gray-900/40 flex items-center justify-center text-gray-400 group-hover:text-white transition-colors">
-              {copied ? (
-                <svg className="w-4 h-4 text-modrinth-green" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                </svg>
-              )}
-            </div>
-          </button>
-        </StyledTooltip>
-      )}
-
       {server.minecraft_java_server?.content && server.minecraft_java_server.content.kind !== 'vanilla' && (server.minecraft_java_server.content.project_name || server.minecraft_java_server.content.version_id) && (
         <div className="flex flex-col gap-2">
           <h3 className="text-xs text-gray-500 font-semibold uppercase tracking-wider m-0">Необходимая сборка</h3>
@@ -111,21 +118,17 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
         </div>
       )}
 
-      {(gameVersions.length > 0 || loaders.length > 0) && (
+      {(javaAddress || gameVersions.length > 0 || loaders.length > 0) && (
         <div className="flex flex-col gap-2">
           <Link href="/discover/servers" className="text-xs text-gray-500 hover:text-modrinth-green font-semibold uppercase tracking-wider m-0 w-fit transition-colors">
             Minecraft: Java Edition
           </Link>
+          {javaAddress && (
+            <ServerAddressCopy address={javaAddress} tooltip="Скопировать IP Java-сервера" />
+          )}
+          <ServerGameVersionChips rawVersions={gameVersions} recommendedVersion={recommendedVersion} />
+          {loaders.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {gameVersions.slice(0, 3).map(ver => (
-              <Link
-                key={ver}
-                href={`/discover/servers?sgv=${ver}`}
-                className="bg-gray-800/60 hover:bg-gray-700/80 border border-gray-700/40 hover:border-modrinth-green/30 px-2.5 py-1.5 leading-none rounded-full text-xs font-semibold text-gray-300 hover:text-white transition-all active:scale-95"
-              >
-                {ver}
-              </Link>
-            ))}
             {loaders.map(loader => (
               <Link
                 key={loader}
@@ -136,6 +139,16 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
               </Link>
             ))}
           </div>
+          )}
+        </div>
+      )}
+
+      {bedrockAddress && (
+        <div className="flex flex-col gap-2">
+          <h3 className="text-xs text-gray-500 font-semibold uppercase tracking-wider m-0">
+            Minecraft: Bedrock Edition
+          </h3>
+          <ServerAddressCopy address={bedrockAddress} tooltip="Скопировать IP Bedrock-сервера" />
         </div>
       )}
 

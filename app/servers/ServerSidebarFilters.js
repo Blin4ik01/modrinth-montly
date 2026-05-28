@@ -72,7 +72,7 @@ export default function ServerSidebarFilters({ onFilterChange, isMobile = false,
   useEffect(() => {
     const parsedFilters = parseFacets()
     const urlQuery = searchParams.get('q') || ''
-    const urlVersion = searchParams.get('v') || ''
+    const urlVersion = searchParams.get('sgv') || searchParams.get('v') || ''
 
     setSearchQuery(urlQuery)
     setSelectedVersion(urlVersion)

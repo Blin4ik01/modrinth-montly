@@ -84,7 +84,7 @@ export default async function ServersPage({ searchParams }) {
   }
 
   if (version) {
-    parts.push(`game_versions IN ["${version}"]`);
+    parts.push(`minecraft_java_server.content.supported_game_versions IN ["${version}"]`);
   }
 
   if (srParams.length > 0) {
