@@ -141,17 +141,18 @@ export default async function ServerPage({ params }) {
       Object.keys(srv.link_urls).forEach(key => {
         const item = srv.link_urls[key]
         if (item && item.url && !list.some(x => x.url === item.url)) {
+          const platform = typeof item.platform === 'string' ? item.platform : ''
           let name = 'Link'
-          if (item.platform === 'discord') name = 'Вступить в Discord'
-          else if (item.platform === 'store') name = 'Магазин'
-          else if (item.platform === 'wiki') name = 'Wiki'
-          else if (item.platform === 'issues') name = 'Issues'
-          else if (item.platform === 'site' || item.platform === 'website') name = 'Наш сайт'
-          else {
-            const rawName = item.platform.charAt(0).toUpperCase() + item.platform.slice(1)
+          if (platform === 'discord') name = 'Вступить в Discord'
+          else if (platform === 'store') name = 'Магазин'
+          else if (platform === 'wiki') name = 'Wiki'
+          else if (platform === 'issues') name = 'Issues'
+          else if (platform === 'site' || platform === 'website') name = 'Наш сайт'
+          else if (platform) {
+            const rawName = platform.charAt(0).toUpperCase() + platform.slice(1)
             name = rawName === 'Site' || rawName === 'Website' ? 'Наш сайт' : rawName
           }
-          list.push({ name, url: item.url, platform: item.platform })
+          list.push({ name, url: item.url, platform: platform || 'link' })
         }
       })
     }
@@ -191,7 +192,7 @@ export default async function ServerPage({ params }) {
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw]}
                 >
-                  {server.body}
+                  {server.body || ''}
                 </ReactMarkdown>
               </div>
             </div>

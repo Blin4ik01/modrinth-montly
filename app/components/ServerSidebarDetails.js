@@ -131,8 +131,8 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
           <div className="flex flex-wrap gap-1.5">
             {loaders.map(loader => (
               <Link
-                key={loader}
-                href={`/discover/servers?sc=${loader.toLowerCase()}`}
+                key={String(loader)}
+                href={`/discover/servers?sc=${encodeURIComponent(String(loader).toLowerCase())}`}
                 className="bg-gray-800/60 hover:bg-gray-700/80 border border-gray-700/40 hover:border-modrinth-green/30 px-2.5 py-1.5 leading-none rounded-full text-xs font-semibold text-gray-300 hover:text-white capitalize transition-all active:scale-95"
               >
                 {loader}
