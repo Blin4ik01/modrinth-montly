@@ -14,7 +14,6 @@ const DEFAULT_LAYOUTS = {
   shaders: 'grid',
   resourcepacks: 'grid',
   modpacks: 'rows',
-  servers: 'grid',
   profiles: 'rows'
 }
 
@@ -25,7 +24,6 @@ const LAYOUT_CATEGORIES = [
   { id: 'shaders', name: 'Страница шейдеров' },
   { id: 'resourcepacks', name: 'Страница ресурспаков' },
   { id: 'modpacks', name: 'Страница сборок' },
-  { id: 'servers', name: 'Страница серверов' },
   { id: 'profiles', name: 'Профили пользователей' }
 ]
 
@@ -37,7 +35,8 @@ export default function SettingsClient() {
   const [toggles, setToggles] = useState({
     'advanced-rendering': true,
     'search-sidebar-right': false,
-    'project-sidebar-left': false
+    'project-sidebar-left': false,
+    'show-disclaimer-badge': true
   })
   
   const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS)
@@ -61,7 +60,8 @@ export default function SettingsClient() {
       const newToggles = {
         'advanced-rendering': localStorage.getItem('advanced-rendering') !== 'false',
         'search-sidebar-right': localStorage.getItem('search-sidebar-right') === 'true',
-        'project-sidebar-left': localStorage.getItem('project-sidebar-left') === 'true'
+        'project-sidebar-left': localStorage.getItem('project-sidebar-left') === 'true',
+        'show-disclaimer-badge': localStorage.getItem('show-disclaimer-badge') !== 'false'
       }
       setToggles(newToggles)
 
@@ -94,6 +94,9 @@ export default function SettingsClient() {
     } else if (key === 'project-sidebar-left') {
       if (newValue) html.classList.add('project-sidebar-left')
       else html.classList.remove('project-sidebar-left')
+    } else if (key === 'show-disclaimer-badge') {
+      if (newValue) html.classList.remove('hide-disclaimer-badge')
+      else html.classList.add('hide-disclaimer-badge')
     }
   }
 
@@ -363,6 +366,29 @@ export default function SettingsClient() {
               >
                 <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
                   toggles['project-sidebar-left'] 
+                    ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
+                    : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
+                }`} />
+              </button>
+            </StyledTooltip>
+          </div>
+
+          <div className="flex flex-row flex-wrap items-center justify-between gap-4">
+            <label htmlFor="show-disclaimer-badge-toggle" className="flex-1 cursor-pointer select-none">
+              <span className="block font-semibold text-white text-sm md:text-base">Дисклеймер неофициального сайта</span>
+              <span className="text-gray-400 text-xs md:text-sm">Отображать плашку «Unofficial site, not affiliated with modrinth.com» вверху страниц. <span className="block mt-1 text-amber-500/80 font-medium">(Включено по умолчанию по запросу Modrinth)</span></span>
+            </label>
+            <StyledTooltip label={toggles['show-disclaimer-badge'] ? 'Включено' : 'Выключено'}>
+              <button
+                id="show-disclaimer-badge-toggle"
+                type="button"
+                role="switch"
+                aria-checked={toggles['show-disclaimer-badge']}
+                onClick={() => handleToggle('show-disclaimer-badge')}
+                className={`group inline-flex shrink-0 items-center rounded-full m-0 p-[2px] transition-all duration-200 cursor-pointer h-6 !w-[48px] border-2 border-transparent ${toggles['show-disclaimer-badge'] ? 'switch-active-bg' : 'bg-[#b8bfc9] dark:bg-[#404959]'}`}
+              >
+                <span className={`rounded-full transition-all duration-200 w-4 h-4 ${
+                  toggles['show-disclaimer-badge'] 
                     ? 'translate-x-[24px] bg-modrinth-green group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]' 
                     : 'translate-x-0 bg-white dark:bg-[#a1a1aa] group-hover:w-[18px] group-hover:h-[18px] group-hover:m-[-1px] group-active:w-[14px] group-active:h-[14px] group-active:m-[1px]'
                 }`} />
