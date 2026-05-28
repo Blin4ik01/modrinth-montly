@@ -29,18 +29,19 @@ export const metadata = {
   title: 'ModrinthProxy',
   description: 'Удобный поиск и скачивание модов, плагинов, шейдеров для Minecraft на русском языке',
   manifest: '/manifest.json',
-  themeColor: '#ec7fab',
   icons: {
     icon: '/icon.png?v=2',
     apple: '/icon.png?v=2',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: 'no',
-    viewportFit: 'cover'
-  }
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#ec7fab',
 }
 
 const POSTERITY_COMMENT_BODY = ` _    _ 
