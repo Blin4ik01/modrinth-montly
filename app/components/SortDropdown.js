@@ -14,7 +14,16 @@ export default function SortDropdown({
   const dropdownRef = useRef(null)
   const router = useRouter()
 
-  const sortOptions = [
+  const isServer = categoryPath === 'discover/servers'
+  
+  const sortOptions = isServer ? [
+    { value: 'relevance', label: 'Релевантность' },
+    { value: 'plays', label: 'Запуски' },
+    { value: 'players', label: 'Игроки онлайн' },
+    { value: 'followers', label: 'Подписчики' },
+    { value: 'created', label: 'Дата публикации' },
+    { value: 'updated', label: 'Дата обновления' },
+  ] : [
     { value: 'relevance', label: 'Релевантность' },
     { value: 'downloads', label: 'Скачивания' },
     { value: 'newest', label: 'Дата публикации' },
@@ -38,20 +47,37 @@ export default function SortDropdown({
   const handleSelect = (value) => {
     const params = new URLSearchParams()
     
-    if (query) params.set('q', query)
-    if (version) params.set('v', version)
-    
-    Object.entries(searchParams).forEach(([key, val]) => {
-      if (key !== 'sort' && key !== 'page') {
-        if (Array.isArray(val)) {
-          val.forEach(v => params.append(key, v))
-        } else if (val) {
-          params.set(key, val)
+    if (isServer) {
+      if (query) params.set('q', query)
+      if (version) params.set('sgv', version)
+      
+      Object.entries(searchParams).forEach(([key, val]) => {
+        if (key !== 'sort' && key !== 'page' && key !== 'v' && key !== 'sgv') {
+          if (Array.isArray(val)) {
+            val.forEach(v => params.append(key, v))
+          } else if (val) {
+            params.set(key, val)
+          }
         }
-      }
-    })
-    
-    if (value !== 'relevance') params.set('sort', value)
+      })
+      
+      if (value !== 'relevance') params.set('sort', value)
+    } else {
+      if (query) params.set('q', query)
+      if (version) params.set('v', version)
+      
+      Object.entries(searchParams).forEach(([key, val]) => {
+        if (key !== 'sort' && key !== 'page') {
+          if (Array.isArray(val)) {
+            val.forEach(v => params.append(key, v))
+          } else if (val) {
+            params.set(key, val)
+          }
+        }
+      })
+      
+      if (value !== 'relevance') params.set('sort', value)
+    }
     
     router.push(`/${categoryPath}?${params.toString()}`)
     setIsOpen(false)

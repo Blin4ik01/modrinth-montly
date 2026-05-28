@@ -12,6 +12,7 @@ export default function MobileNav({ onFilterClick }) {
     if (path === '/') return pathname === '/'
     if (path === '/mods') return pathname.startsWith('/mods') || pathname.startsWith('/discover/mods') || pathname.startsWith('/mod/')
     if (path === '/plugins') return pathname.startsWith('/plugins') || pathname.startsWith('/discover/plugins') || pathname.startsWith('/plugin/')
+    if (path === '/servers') return pathname.startsWith('/servers') || pathname.startsWith('/discover/servers') || pathname.startsWith('/server/')
     if (path === '/shaders') return pathname.startsWith('/shaders') || pathname.startsWith('/discover/shaders') || pathname.startsWith('/shader/')
     if (path === '/resourcepacks') return pathname.startsWith('/resourcepacks') || pathname.startsWith('/discover/resourcepacks') || pathname.startsWith('/resourcepack/')
     if (path === '/datapacks') return pathname.startsWith('/datapacks') || pathname.startsWith('/discover/datapacks') || pathname.startsWith('/datapack/')
@@ -57,6 +58,12 @@ export default function MobileNav({ onFilterClick }) {
       label: 'Плагины', 
       icon: <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"></path></svg>,
       color: 'from-blue-500 to-cyan-500' 
+    },
+    { 
+      href: '/servers', 
+      label: 'Серверы', 
+      icon: <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M5 12a2 2 0 012-2h10a2 2 0 012 2m-14 0a2 2 0 002 2h10a2 2 0 002-2M7 8l-2 2 2 2m8-4l2 2-2 2"></path></svg>,
+      color: 'from-emerald-500 to-teal-500' 
     },
     { 
       href: '/app', 
@@ -149,12 +156,14 @@ export default function MobileNav({ onFilterClick }) {
   const showFilterButton =
     pathname.startsWith('/mods') ||
     pathname.startsWith('/plugins') ||
+    pathname.startsWith('/servers') ||
     pathname.startsWith('/shaders') ||
     pathname.startsWith('/resourcepacks') ||
     pathname.startsWith('/datapacks') ||
     pathname.startsWith('/modpacks') ||
     pathname.startsWith('/discover/mods') ||
     pathname.startsWith('/discover/plugins') ||
+    pathname.startsWith('/discover/servers') ||
     pathname.startsWith('/discover/shaders') ||
     pathname.startsWith('/discover/resourcepacks') ||
     pathname.startsWith('/discover/datapacks') ||

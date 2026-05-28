@@ -13,7 +13,10 @@ const getSettingKey = (type, isProfile) => {
     'datapack': 'datapacks',
     'shader': 'shaders',
     'resourcepack': 'resourcepacks',
-    'modpack': 'modpacks'
+    'modpack': 'modpacks',
+    'minecraft_java_server': 'servers',
+    'server': 'servers',
+    'servers': 'servers'
   }
   return mapping[type] || `${type}s`
 }

@@ -14,6 +14,7 @@ const DEFAULT_LAYOUTS = {
   shaders: 'grid',
   resourcepacks: 'grid',
   modpacks: 'rows',
+  servers: 'rows',
   profiles: 'rows'
 }
 
@@ -24,6 +25,7 @@ const LAYOUT_CATEGORIES = [
   { id: 'shaders', name: 'Страница шейдеров' },
   { id: 'resourcepacks', name: 'Страница ресурспаков' },
   { id: 'modpacks', name: 'Страница сборок' },
+  { id: 'servers', name: 'Страница серверов' },
   { id: 'profiles', name: 'Профили пользователей' }
 ]
 

@@ -20,6 +20,7 @@ export default function Navigation() {
     if (path.startsWith('/discover/shaders') || path.startsWith('/shaders') || path.startsWith('/shader/')) return 'cyan'
     if (path.startsWith('/discover/modpacks') || path.startsWith('/modpacks') || path.startsWith('/modpack/')) return 'red'
     if (path.startsWith('/discover/plugins') || path.startsWith('/plugins') || path.startsWith('/plugin/')) return 'blue'
+    if (path.startsWith('/discover/servers') || path.startsWith('/servers') || path.startsWith('/server/')) return 'emerald'
     if (path.startsWith('/app') || path.startsWith('/launcher')) return 'emerald'
     if (path.startsWith('/news')) return 'yellow'
     return 'modrinth-green'
@@ -45,6 +46,9 @@ export default function Navigation() {
     }
     if (path === '/discover/plugins') {
       return pathname.startsWith('/discover/plugins') || pathname.startsWith('/plugins') || pathname.startsWith('/plugin/')
+    }
+    if (path === '/discover/servers') {
+      return pathname.startsWith('/discover/servers') || pathname.startsWith('/servers') || pathname.startsWith('/server/')
     }
     return pathname.startsWith(path)
   }
@@ -199,6 +203,18 @@ export default function Navigation() {
             <path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"></path>
           </svg>
           <span>Плагины</span>
+        </span>
+      </Link>
+      
+      <Link 
+        ref={el => linksRef.current['/discover/servers'] = el}
+        href="/discover/servers" 
+        className="group relative px-2.5 md:px-4 py-2 rounded-lg transition-all duration-300 whitespace-nowrap z-10 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/30 hover:bg-emerald-200/30 dark:hover:bg-emerald-950/30">
+        <span className={`text-xs md:text-sm font-semibold transition-colors flex items-center gap-1.5 ${isActive('/discover/servers') || isActive('/servers') ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400'}`}>
+          <svg className="hidden sm:inline w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M5 12h14M5 12a2 2 0 012-2h10a2 2 0 012 2m-14 0a2 2 0 002 2h10a2 2 0 002-2M7 8l-2 2 2 2m8-4l2 2-2 2"></path>
+          </svg>
+          <span>Серверы</span>
         </span>
       </Link>
       

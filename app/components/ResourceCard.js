@@ -4,6 +4,7 @@ import { CATEGORIES } from '@/lib/categories'
 import { LOADERS } from '@/lib/loaders'
 import { RESOURCEPACK_CATEGORIES } from '@/lib/resourcepackCategories'
 import { SHADER_STYLES, SHADER_FEATURES, SHADER_PERFORMANCE } from '@/lib/shaderCategories'
+import { SERVER_CATEGORIES, SERVER_REGIONS } from '@/lib/serverCategories'
 import RelativeTime from './RelativeTime'
 
 function uniqueStrings(list) {
@@ -18,7 +19,10 @@ export default function ResourceCard({ resource, type = 'mod', forceLayout = nul
     'shader': 'shader',
     'resourcepack': 'resourcepack',
     'datapack': 'datapack',
-    'modpack': 'modpack'
+    'modpack': 'modpack',
+    'minecraft_java_server': 'server',
+    'servers': 'server',
+    'server': 'server'
   }
 
   const basePath = typeMap[type] || 'mod'
@@ -30,7 +34,8 @@ export default function ResourceCard({ resource, type = 'mod', forceLayout = nul
       ...RESOURCEPACK_CATEGORIES,
       ...SHADER_STYLES,
       ...SHADER_FEATURES,
-      ...SHADER_PERFORMANCE
+      ...SHADER_PERFORMANCE,
+      ...SERVER_CATEGORIES
     ]
     
     const cat = allCategories.find(c => c.id === categoryId)
@@ -198,6 +203,113 @@ export default function ResourceCard({ resource, type = 'mod', forceLayout = nul
           </div>
         </article>
       </Link>
+    )
+  }
+
+  const isServer = basePath === 'server'
+
+  if (isServer) {
+    const pingObj = resource.minecraft_java_server?.ping
+    const ping = pingObj?.data
+    const playersOnline = ping?.players_online ?? null
+    const plays2w = resource.minecraft_java_server?.verified_plays_2w ?? null
+    const plays4w = resource.minecraft_java_server?.verified_plays_4w ?? null
+    const serverRegion = resource.minecraft_server?.region ?? null
+    const regionData = serverRegion ? SERVER_REGIONS.find(r => r.id === serverRegion) : null
+    const hasPingInfo = pingObj !== undefined && pingObj !== null
+    const isOffline = hasPingInfo && (ping === null || ping === undefined)
+
+    const serverCats = uniqueStrings((resource.display_categories || resource.categories || []))
+      .filter(c => c !== 'minecraft_java_server')
+      .slice(0, 3)
+      .map(catId => getCategoryIcon(catId))
+      .filter(Boolean)
+
+    return (
+      <div className="bg-modrinth-dark border border-gray-800 rounded-lg p-3 md:p-4 flex items-start gap-3 md:gap-4">
+        {resource.icon_url && (
+          <img
+            src={resource.icon_url}
+            alt={resource.title}
+            className="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover flex-shrink-0"
+          />
+        )}
+
+        <div className="flex-1 min-w-0">
+          <div className="mb-1 flex items-baseline gap-2 flex-wrap">
+            <Link href={`/${basePath}/${resource.slug}`}>
+              <h3 className="text-lg md:text-xl font-bold transition-colors cursor-pointer hover:text-modrinth-green">
+                {resource.title}
+              </h3>
+            </Link>
+          </div>
+          <p className="text-sm text-gray-400 mb-2 line-clamp-2">{resource.description}</p>
+          <div className="flex flex-wrap gap-1.5 items-center">
+            {regionData && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-800/80 border border-gray-700/50 rounded-full text-xs text-gray-300">
+                <svg className="w-3 h-3 text-cyan-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                {regionData.name}
+              </span>
+            )}
+            {serverCats.map(cat => (
+              <span
+                key={cat.name}
+                className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-800/80 border border-gray-700/50 rounded-full text-xs text-gray-300"
+              >
+                <span className="w-3 h-3 shrink-0">{cat.icon}</span>
+                {cat.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden md:flex flex-col justify-between items-end text-right flex-shrink-0 min-w-[120px] self-stretch">
+          <div className="flex flex-col gap-2.5 items-end">
+            {playersOnline !== null ? (
+              <div className="inline-flex items-center gap-2 font-semibold bg-modrinth-green/10 px-3 py-1.5 rounded-xl">
+                <span className="relative flex h-2.5 w-2.5 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-modrinth-green opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-modrinth-green"></span>
+                </span>
+                <span className="text-base leading-none tabular-nums">
+                  <span className="text-white font-bold">{playersOnline.toLocaleString('ru-RU')}</span>
+                  <span className="text-modrinth-green ml-1.5 text-sm font-medium">в сети</span>
+                </span>
+              </div>
+            ) : isOffline ? (
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-gray-600 flex-shrink-0"></span>
+                <span className="text-xs text-gray-500">офлайн</span>
+              </div>
+            ) : null}
+
+            {(plays2w !== null || plays4w !== null) && (
+              <div className="flex items-center gap-1.5 text-gray-400">
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="m5 3 14 9-14 9z"/>
+                </svg>
+                <div className="flex flex-col gap-0.5">
+                  {plays2w !== null && (
+                    <span className="text-sm leading-tight">
+                      <strong className="text-white">{plays2w.toLocaleString('ru-RU')}</strong>
+                      <span className="text-gray-500 ml-1 text-xs">за 2 нед.</span>
+                    </span>
+                  )}
+                  {plays4w !== null && (
+                    <span className="text-sm leading-tight">
+                      <strong className="text-white">{plays4w.toLocaleString('ru-RU')}</strong>
+                      <span className="text-gray-500 ml-1 text-xs">за мес.</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     )
   }
 

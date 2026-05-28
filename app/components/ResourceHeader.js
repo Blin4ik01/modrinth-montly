@@ -8,6 +8,8 @@ import DownloadModal from './DownloadModal'
 import MobileDownloadButton from './MobileDownloadButton'
 import MinePluginCheckPromo, { DownloadPromoConnector } from './MinePluginCheckPromo'
 import AuthorPluginPromo from './AuthorPluginPromo'
+import CopyButton from './CopyButton'
+import PlayServerSection from './PlayServerSection'
 
 const MINEPLUGIN_PROMO_MAX_DOWNLOADS = 100_000
 
@@ -26,6 +28,8 @@ const CONTENT_TYPE_NAMES = {
   resourcepacks: 'Ресурспаки',
   shader: 'Шейдеры',
   shaders: 'Шейдеры',
+  server: 'Серверы',
+  servers: 'Серверы',
 }
 
 const CONTENT_TYPE_ROUTES = {
@@ -35,11 +39,17 @@ const CONTENT_TYPE_ROUTES = {
   datapack: 'datapacks',
   resourcepack: 'resourcepacks',
   shader: 'shaders',
+  server: 'servers',
+  servers: 'servers',
 }
 
 export default function ResourceHeader({ resource, contentType, versions = [] }) {
   const contentTypeName = CONTENT_TYPE_NAMES[contentType] || 'Ресурсы'
   const contentTypeRoute = CONTENT_TYPE_ROUTES[contentType] || contentType
+  const isServer = contentType === 'server' || contentType === 'servers' || resource.project_type === 'minecraft_java_server'
+  
+  const playersOnline = resource.minecraft_java_server?.ping?.data?.players_online ?? resource.minecraft_java_server?.ping?.players_online
+  const recentPlays = resource.minecraft_java_server?.verified_plays_2w ?? resource.verified_plays_2w
   
   let allCategories = CATEGORIES
   if (contentType === 'resourcepack' || contentType === 'resourcepacks') {
@@ -97,95 +107,162 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
               <h1 className="text-2xl md:text-3xl font-bold mb-2">{resource.title}</h1>
               <p className="text-gray-700 dark:text-gray-300 mb-3 text-sm md:text-base">{resource.description}</p>
               
-              <div className="hidden lg:flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm">
-                {resource.downloads != null && (
-                  <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.downloads)}</span>
-                  </div>
-                )}
-                {(resource.followers != null || resource.follows != null) && (
-                  <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                    <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.followers || resource.follows)}</span>
-                  </div>
-                )}
-                {allResourceCategories.length > 0 && (
-                  <div className="hidden sm:flex flex-wrap gap-1.5">
-                    {allResourceCategories.slice(0, 4).map((catId) => {
-                      try {
-                        if (!catId || typeof catId !== 'string') return null
-                        const category = allCategories.find(c => c.id === catId)
-                        if (!category || !category.icon || !category.name) return null
-                        
-                        return (
-                          <Link
-                            key={catId}
-                            href={`/${contentTypeRoute}?f=categories:${catId}`}
-                            className="px-2 py-1 text-xs font-semibold rounded-lg hover:brightness-110 transition-all flex items-center gap-1.5"
-                            style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
-                          >
-                            <div className="h-3.5 w-3.5 flex-shrink-0">{category.icon}</div>
-                            <span>{category.name}</span>
-                          </Link>
-                        )
-                      } catch (e) {
-                        return null
-                      }
-                    })}
-                  </div>
+              <div className={`${isServer ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm`}>
+                {isServer ? (
+                  <>
+                    {playersOnline != null && (
+                      <div className="flex items-center gap-1.5 text-green-500 font-semibold bg-green-500/10 border border-green-500/25 px-2.5 py-1 rounded-full text-xs md:text-sm">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span>{playersOnline} в сети</span>
+                      </div>
+                    )}
+                    {recentPlays != null && (
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 bg-gray-800/40 border border-gray-700/35 px-2.5 py-1 rounded-full text-xs md:text-sm">
+                        <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24">
+                          <path d="m5 3 14 9-14 9z"></path>
+                        </svg>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {recentPlays.toLocaleString('ru-RU')} {(() => {
+                            const mod10 = recentPlays % 10
+                            const mod100 = recentPlays % 100
+                            if (mod100 >= 11 && mod100 <= 19) return 'недавних запусков'
+                            if (mod10 === 1) return 'недавний запуск'
+                            if (mod10 >= 2 && mod10 <= 4) return 'недавних запуска'
+                            return 'недавних запусков'
+                          })()}
+                        </span>
+                      </div>
+                    )}
+                    {allResourceCategories.length > 0 && (
+                      <div className="hidden sm:flex flex-wrap gap-1.5 ml-2">
+                        {allResourceCategories.slice(0, 4).map((catId) => {
+                          try {
+                            if (!catId || typeof catId !== 'string') return null
+                            const category = allCategories.find(c => c.id === catId)
+                            const displayName = category?.name || catId.charAt(0).toUpperCase() + catId.slice(1)
+                            return (
+                              <Link
+                                key={catId}
+                                href={`/discover/servers?sc=${catId}`}
+                                className="px-2.5 py-1 text-xs font-semibold rounded-full border border-gray-700/50 hover:border-modrinth-green/30 bg-gray-800/40 hover:bg-gray-800 hover:text-white transition-all duration-300"
+                                style={{ color: 'var(--text-muted)' }}
+                              >
+                                <span>{displayName}</span>
+                              </Link>
+                            )
+                          } catch (e) {
+                            return null
+                          }
+                        })}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {resource.downloads != null && (
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.downloads)}</span>
+                      </div>
+                    )}
+                    {(resource.followers != null || resource.follows != null) && (
+                      <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.followers || resource.follows)}</span>
+                      </div>
+                    )}
+                    {allResourceCategories.length > 0 && (
+                      <div className="hidden sm:flex flex-wrap gap-1.5">
+                        {allResourceCategories.slice(0, 4).map((catId) => {
+                          try {
+                            if (!catId || typeof catId !== 'string') return null
+                            const category = allCategories.find(c => c.id === catId)
+                            if (!category || !category.icon || !category.name) return null
+                            
+                            return (
+                              <Link
+                                key={catId}
+                                href={`/${contentTypeRoute}?f=categories:${catId}`}
+                                className="px-2 py-1 text-xs font-semibold rounded-lg hover:brightness-110 transition-all flex items-center gap-1.5"
+                                style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
+                              >
+                                <div className="h-3.5 w-3.5 flex-shrink-0">{category.icon}</div>
+                                <span>{category.name}</span>
+                              </Link>
+                            )
+                          } catch (e) {
+                            return null
+                          }
+                        })}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
           </div>
 
           <div className="flex w-full flex-col lg:w-auto">
-            <div className="w-full lg:flex lg:justify-end">
-              {showPromoBelowDownload ? (
-                <div className="flex flex-col items-center gap-2 lg:inline-flex lg:gap-2">
-                  <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
-                  <DownloadPromoConnector className="hidden lg:flex pb-px" />
-                </div>
-              ) : (
-                <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
-              )}
-            </div>
-
-            <div className="mt-3 w-full lg:mt-0">
-              <div className="flex w-full items-center justify-between gap-3 lg:hidden">
-                <div className="flex min-w-0 flex-col gap-2 text-xs">
-                  {resource.downloads != null && (
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.downloads)}</span>
+            {isServer ? (
+              <PlayServerSection 
+                resource={resource} 
+                playersOnline={playersOnline} 
+                region={resource.minecraft_server?.region} 
+                address={resource.minecraft_java_server?.address} 
+              />
+            ) : (
+              <>
+                <div className="w-full lg:flex lg:justify-end">
+                  {showPromoBelowDownload ? (
+                    <div className="flex flex-col items-center gap-2 lg:inline-flex lg:gap-2">
+                      <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
+                      <DownloadPromoConnector className="hidden lg:flex pb-px" />
                     </div>
-                  )}
-                  {(resource.followers != null || resource.follows != null) && (
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                      </svg>
-                      <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.followers || resource.follows)}</span>
-                    </div>
+                  ) : (
+                    <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
                   )}
                 </div>
 
-                {showPromoBelowDownload ? (
-                  <div className="flex shrink-0 flex-col items-center gap-1">
-                    <MobileDownloadButton accent={downloadAccent} resourceTitle={resource.title} />
-                    <DownloadPromoConnector />
+                <div className="mt-3 w-full lg:mt-0">
+                  <div className="flex w-full items-center justify-between gap-3 lg:hidden">
+                    <div className="flex min-w-0 flex-col gap-2 text-xs">
+                      {resource.downloads != null && (
+                        <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                          <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.downloads)}</span>
+                        </div>
+                      )}
+                      {(resource.followers != null || resource.follows != null) && (
+                        <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                          <span className="font-semibold text-gray-900 dark:text-white">{formatDownloads(resource.followers || resource.follows)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {showPromoBelowDownload ? (
+                      <div className="flex shrink-0 flex-col items-center gap-1">
+                        <MobileDownloadButton accent={downloadAccent} resourceTitle={resource.title} />
+                        <DownloadPromoConnector />
+                      </div>
+                    ) : (
+                      <MobileDownloadButton accent={downloadAccent} resourceTitle={resource.title} />
+                    )}
                   </div>
-                ) : (
-                  <MobileDownloadButton accent={downloadAccent} resourceTitle={resource.title} />
-                )}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

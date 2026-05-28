@@ -10,14 +10,24 @@ export function middleware(request) {
     '/shaders': '/discover/shaders',
     '/modpacks': '/discover/modpacks',
     '/plugins': '/discover/plugins',
+    '/servers': '/discover/servers',
   }
   
   for (const [oldPath, newPath] of Object.entries(redirects)) {
     if (pathname === oldPath || pathname.startsWith(oldPath + '/')) {
       const newPathname = pathname.replace(oldPath, newPath)
       const newUrl = new URL(newPathname + search, request.url)
+      if (newPath === '/discover/servers' && !newUrl.searchParams.has('sst')) {
+        newUrl.searchParams.set('sst', 'online')
+      }
       return NextResponse.redirect(newUrl, 308)
     }
+  }
+
+  if (pathname === '/discover/servers' && !request.nextUrl.searchParams.has('sst')) {
+    const newUrl = new URL(request.url)
+    newUrl.searchParams.set('sst', 'online')
+    return NextResponse.redirect(newUrl, 307)
   }
   
   return NextResponse.next()
@@ -31,6 +41,8 @@ export const config = {
     '/shaders/:path*',
     '/modpacks/:path*',
     '/plugins/:path*',
+    '/servers/:path*',
+    '/discover/servers',
   ],
 }
 

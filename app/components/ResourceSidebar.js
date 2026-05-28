@@ -7,7 +7,7 @@ import CompressedGameVersionsChips from './CompressedGameVersionsChips'
 import CopyButton from './CopyButton'
 
 export default function ResourceSidebar({ resource, teamMembers = [], contentType = null }) {
-  const gameVersions = resource.game_versions || []
+  const gameVersions = resource.minecraft_java_server?.content?.supported_game_versions || resource.game_versions || []
   const loaders = (resource.loaders || []).filter(l => l !== 'minecraft')
   const browseRoute = resolveContentTypeRoute(contentType, resource.project_type)
   const gameVersionRanges = compressSidebarGameVersions(gameVersions)
@@ -92,6 +92,37 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
         </div>
       )}
 
+      {resource.project_type === 'minecraft_java_server' && (
+        <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+            <svg className="w-4 h-4 text-modrinth-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 012-2h10a2 2 0 012 2m-14 0a2 2 0 002 2h10a2 2 0 002-2M7 8l-2 2 2 2m8-4l2 2-2 2" />
+            </svg>
+            О сервере
+          </h3>
+          <div className="space-y-3 text-xs md:text-sm">
+            {resource.minecraft_server?.region && (
+              <div className="flex justify-between border-b border-gray-800 pb-1.5">
+                <span className="text-gray-500">Регион</span>
+                <span className="font-semibold text-white uppercase">{resource.minecraft_server.region}</span>
+              </div>
+            )}
+            {resource.minecraft_server?.languages && resource.minecraft_server.languages.length > 0 && (
+              <div className="flex justify-between border-b border-gray-800 pb-1.5">
+                <span className="text-gray-500">Языки</span>
+                <span className="font-semibold text-white uppercase">{resource.minecraft_server.languages.join(', ')}</span>
+              </div>
+            )}
+            {resource.minecraft_java_server?.ping?.version_name && (
+              <div className="flex justify-between border-b border-gray-800 pb-1.5">
+                <span className="text-gray-500">Ядро/Версия</span>
+                <span className="font-semibold text-white text-right truncate max-w-[160px]">{resource.minecraft_java_server.ping.version_name}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {(resource.discord_url || resource.source_url || resource.wiki_url || resource.issues_url || (resource.donation_urls && resource.donation_urls.length > 0)) && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
@@ -139,7 +170,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
                 <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
                 </svg>
-                <span className="group-hover:underline">Сервер Discord</span>
+                <span className="group-hover:underline">Вступить в Discord</span>
                 <svg className="w-3 h-3 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" />
                 </svg>
@@ -172,7 +203,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
             <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            Создатели
+            Авторы
           </h3>
           <div className="space-y-2">
             {teamMembers.map((member, idx) => (
@@ -207,7 +238,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
           <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Детали
+          Сведения
         </h3>
         <div className="space-y-2 text-xs">
           {resource.license && resource.license.id && (
@@ -278,7 +309,10 @@ function resolveContentTypeRoute(contentTypeProp, projectType) {
     'shader': 'shaders',
     'shaders': 'shaders',
     'datapack': 'datapacks',
-    'datapacks': 'datapacks'
+    'datapacks': 'datapacks',
+    'minecraft_java_server': 'servers',
+    'servers': 'servers',
+    'server': 'servers'
   }
 
   if (contentTypeProp && typeMap[contentTypeProp]) {
@@ -311,20 +345,24 @@ function formatTimeAgo(dateString) {
   const diffInSeconds = Math.floor((now - date) / 1000)
   
   const intervals = [
-    { label: 'год', seconds: 31536000, plural: 'года', many: 'лет' },
-    { label: 'месяц', seconds: 2592000, plural: 'месяца', many: 'месяцев' },
-    { label: 'неделю', seconds: 604800, plural: 'недели', many: 'недель' },
-    { label: 'день', seconds: 86400, plural: 'дня', many: 'дней' },
-    { label: 'час', seconds: 3600, plural: 'часа', many: 'часов' },
-    { label: 'минуту', seconds: 60, plural: 'минуты', many: 'минут' },
+    { seconds: 31536000, one: 'год', two: 'года', many: 'лет' },
+    { seconds: 2592000, one: 'месяц', two: 'месяца', many: 'месяцев' },
+    { seconds: 604800, one: 'неделю', two: 'недели', many: 'недель' },
+    { seconds: 86400, one: 'день', two: 'дня', many: 'дней' },
+    { seconds: 3600, one: 'час', two: 'часа', many: 'часов' },
+    { seconds: 60, one: 'минуту', two: 'минуты', many: 'минут' },
   ]
   
   for (const interval of intervals) {
     const count = Math.floor(diffInSeconds / interval.seconds)
     if (count >= 1) {
-      const word = count === 1 ? interval.label : 
-                   count < 5 ? interval.plural : 
-                   interval.many
+      const mod10 = count % 10
+      const mod100 = count % 100
+      let word = interval.many
+      if (!(mod100 >= 11 && mod100 <= 19)) {
+        if (mod10 === 1) word = interval.one
+        else if (mod10 >= 2 && mod10 <= 4) word = interval.two
+      }
       return `${count} ${word} назад`
     }
   }
