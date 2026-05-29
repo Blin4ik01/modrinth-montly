@@ -228,7 +228,9 @@ export default function SettingsClient() {
 
       <section className="universal-card" aria-labelledby="color-palette-heading">
         <h2 id="color-palette-heading" className="text-xl font-bold text-white mb-1">Акцентный цвет</h2>
-        <p className="text-gray-400 mb-6 text-xs md:text-sm">Выберите основной акцентный цвет интерфейса.</p>
+        <p className="text-gray-400 mb-6 text-xs md:text-sm">
+          Цветовая часть айдентики — кнопки, ссылки, подсветка. Не весь образ сайта, только палитра.
+        </p>
         <div className="flex flex-wrap justify-center gap-4 mt-4">
           {Object.values(PALETTES).map((palette, index) => {
             const isSelected = activePalette === palette.id
