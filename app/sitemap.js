@@ -11,6 +11,8 @@ export default async function sitemap() {
     '/resourcepacks',
     '/datapacks',
     '/modpacks',
+    '/servers',
+    '/discover/servers',
     '/news',
     '/extension',
     '/bmadnco',
@@ -31,6 +33,7 @@ export default async function sitemap() {
     { facet: 'resourcepack', route: 'resourcepack' },
     { facet: 'datapack', route: 'datapack' },
     { facet: 'modpack', route: 'modpack' },
+    { facet: 'minecraft_java_server', route: 'server' },
   ]
 
   const dynamicPages = []

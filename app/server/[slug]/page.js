@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getMod, getTeamMembers, getVersion, formatDate } from '@/lib/modrinth'
 import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked } from '@/lib/contentFilter'
 import { getFilterConfig, getCategoryName } from '@/lib/filterConfig'
+import { buildServerPageMetadata, buildServerNotFoundMetadata } from '@/lib/serverPageSeo'
 import { SERVER_CATEGORY_TAG_CLASS } from '@/lib/serverTagStyles'
 import ResourceHeader from '@/app/components/ResourceHeader'
 import ServerSidebarDetails from '@/app/components/ServerSidebarDetails'
@@ -16,36 +17,9 @@ import rehypeRaw from 'rehype-raw'
 export async function generateMetadata({ params }) {
   try {
     const server = await getMod(params.slug)
-    const url = `https://modrinth.black/server/${params.slug}`
-    const fullDescription = server.description || `Minecraft сервер ${server.title}. Поддержка версий: ${server.minecraft_java_server?.content?.supported_game_versions?.join(', ') || 'все версии'}.`
-    
-    return {
-      title: `${server.title} - Minecraft сервер`,
-      description: fullDescription,
-      robots: 'all',
-      openGraph: {
-        siteName: 'modrinth.black',
-        type: 'website',
-        url: url,
-        title: `${server.title} - Minecraft сервер`,
-        description: server.description,
-        images: server.icon_url ? [{ url: server.icon_url }] : [],
-      },
-      twitter: {
-        card: 'summary',
-        title: `${server.title} - Minecraft сервер`,
-        description: server.description,
-        images: server.icon_url ? [server.icon_url] : [],
-      },
-      other: {
-        'theme-color': '#1bd96a',
-      },
-    }
+    return buildServerPageMetadata(server, params.slug)
   } catch {
-    return {
-      title: 'Сервер не найден | ModrinthProxy',
-      description: 'Запрашиваемый сервер не найден',
-    }
+    return buildServerNotFoundMetadata()
   }
 }
 
