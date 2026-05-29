@@ -1,6 +1,7 @@
 'use client'
 
 import StyledTooltip from './StyledTooltip'
+import { withReferralUtm } from '@/lib/referralUtm'
 
 function linkTooltipTarget(url) {
   try {
@@ -17,25 +18,33 @@ function hasGoToTooltip(link) {
   return ['discord', 'site', 'website', 'store', 'wiki'].includes(link.platform)
 }
 
+const linkButtonClassName =
+  'flex gap-2 items-center w-fit text-gray-300 hover:text-white transition-colors text-sm leading-tight hover:underline bg-transparent border-0 p-0 cursor-pointer text-left font-inherit'
+
 export default function ServerSidebarLink({ link, icon }) {
-  const anchor = (
-    <a
-      href={link.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex gap-2 items-center w-fit text-gray-300 hover:text-white transition-colors text-sm leading-tight hover:underline"
+  const goToLabel = hasGoToTooltip(link) ? `Перейти на ${linkTooltipTarget(link.url)}` : link.name
+
+  const control = (
+    <button
+      type="button"
+      className={linkButtonClassName}
+      aria-label={goToLabel}
+      onClick={() => {
+        const target = withReferralUtm(link.url)
+        window.open(target, '_blank', 'noopener,noreferrer')
+      }}
     >
       {icon}
       <span>{link.name}</span>
       <svg className="w-3 h-3 shrink-0 text-current opacity-60" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" />
       </svg>
-    </a>
+    </button>
   )
 
   if (hasGoToTooltip(link)) {
-    return <StyledTooltip label={`Перейти на ${linkTooltipTarget(link.url)}`}>{anchor}</StyledTooltip>
+    return <StyledTooltip label={goToLabel}>{control}</StyledTooltip>
   }
 
-  return anchor
+  return control
 }
