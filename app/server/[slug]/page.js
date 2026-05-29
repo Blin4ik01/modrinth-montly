@@ -3,9 +3,12 @@ import { notFound } from 'next/navigation'
 import { getMod, getTeamMembers, getVersion, formatDate } from '@/lib/modrinth'
 import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked } from '@/lib/contentFilter'
 import { getFilterConfig, getCategoryName } from '@/lib/filterConfig'
+import { SERVER_CATEGORY_TAG_CLASS } from '@/lib/serverTagStyles'
 import ResourceHeader from '@/app/components/ResourceHeader'
 import ServerSidebarDetails from '@/app/components/ServerSidebarDetails'
 import ServerGallery from '@/app/components/ServerGallery'
+import ServerSidebarLink from '@/app/components/ServerSidebarLink'
+import ServerLinkIcon from '@/app/components/ServerLinkIcon'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -134,7 +137,7 @@ export default async function ServerPage({ params }) {
     const list = []
     if (srv.discord_url) list.push({ name: 'Вступить в Discord', url: srv.discord_url, platform: 'discord' })
     if (srv.source_url) list.push({ name: 'Source Code', url: srv.source_url, platform: 'source' })
-    if (srv.wiki_url) list.push({ name: 'Wiki', url: srv.wiki_url, platform: 'wiki' })
+    if (srv.wiki_url) list.push({ name: 'Перейти в вики', url: srv.wiki_url, platform: 'wiki' })
     if (srv.issues_url) list.push({ name: 'Issues', url: srv.issues_url, platform: 'issues' })
     
     if (srv.link_urls) {
@@ -144,34 +147,19 @@ export default async function ServerPage({ params }) {
           const platform = typeof item.platform === 'string' ? item.platform : ''
           let name = 'Link'
           if (platform === 'discord') name = 'Вступить в Discord'
-          else if (platform === 'store') name = 'Магазин'
-          else if (platform === 'wiki') name = 'Wiki'
+          else if (platform === 'store') name = 'Перейти в магазин'
+          else if (platform === 'wiki') name = 'Перейти в вики'
           else if (platform === 'issues') name = 'Issues'
-          else if (platform === 'site' || platform === 'website') name = 'Наш сайт'
+          else if (platform === 'site' || platform === 'website') name = 'Перейти на сайт'
           else if (platform) {
             const rawName = platform.charAt(0).toUpperCase() + platform.slice(1)
-            name = rawName === 'Site' || rawName === 'Website' ? 'Наш сайт' : rawName
+            name = rawName === 'Site' || rawName === 'Website' ? 'Перейти на сайт' : rawName
           }
           list.push({ name, url: item.url, platform: platform || 'link' })
         }
       })
     }
     return list
-  }
-
-  const getLinkIcon = (platform) => {
-    if (platform === 'discord') {
-      return (
-        <svg className="w-4 h-4 flex-shrink-0 text-[#5865F2]" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.3 18.3 0 0 0-5.487 0 13 13 0 0 0-.617-1.25.08.08 0 0 0-.079-.037A19.7 19.7 0 0 0 3.677 4.37a.1.1 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.08.08 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.08.08 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13 13 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10 10 0 0 0 .372-.292.07.07 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.07.07 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.08.08 0 0 0 .084.028 19.8 19.8 0 0 0 6.002-3.03.08.08 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03M8.02 15.33c-1.182 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418m7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418" />
-        </svg>
-      )
-    }
-    return (
-      <svg className="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-      </svg>
-    )
   }
 
   const links = getLinks(server)
@@ -207,19 +195,7 @@ export default async function ServerPage({ params }) {
               <h2 className="text-lg font-bold text-white m-0">Ссылки</h2>
               <div className="flex flex-col gap-3 font-semibold">
                 {links.map((link, idx) => (
-                  <a 
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex gap-2 items-center w-fit text-modrinth-green hover:brightness-125 transition-all text-sm leading-tight hover:underline"
-                  >
-                    {getLinkIcon(link.platform)}
-                    <span>{link.name}</span>
-                    <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                    </svg>
-                  </a>
+                  <ServerSidebarLink key={idx} link={link} icon={<ServerLinkIcon platform={link.platform} />} />
                 ))}
               </div>
             </div>
@@ -233,7 +209,7 @@ export default async function ServerPage({ params }) {
                   <Link
                     key={tag}
                     href={`/discover/servers?sc=${tag}`}
-                    className="bg-gray-800 hover:bg-gray-700 border border-gray-700/40 text-gray-300 px-2.5 py-1.5 leading-none rounded-full text-xs font-semibold hover:text-white transition-all active:scale-95"
+                    className={SERVER_CATEGORY_TAG_CLASS}
                   >
                     {getCategoryName(tag, filterConfig)}
                   </Link>

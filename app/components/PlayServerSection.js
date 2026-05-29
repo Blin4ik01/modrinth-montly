@@ -70,15 +70,18 @@ export default function PlayServerSection({ resource, playersOnline, region, add
 
   return (
     <div className="flex flex-col gap-2.5 w-full lg:w-[280px] items-center">
-      <button
-        onClick={handlePlay}
-        className="modrinth-button-font w-fit px-5 h-10 bg-modrinth-green hover:bg-modrinth-green-light text-black rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 active:scale-[0.98] shadow-lg shadow-modrinth-green/10 text-base whitespace-nowrap"
-      >
-        <svg className="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m5 3 14 9-14 9z" />
-        </svg>
-        <span>Играть</span>
-      </button>
+      <StyledTooltip label="Играть через Modrinth App">
+        <button
+          type="button"
+          onClick={handlePlay}
+          className="modrinth-button-font w-fit px-5 h-10 bg-modrinth-green hover:bg-modrinth-green-light text-black rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 active:scale-[0.98] shadow-lg shadow-modrinth-green/10 text-base whitespace-nowrap"
+        >
+          <svg className="w-6 h-6 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m5 3 14 9-14 9z" />
+          </svg>
+          <span>Играть</span>
+        </button>
+      </StyledTooltip>
 
       {address && (
         <div className="flex flex-col gap-1.5 w-full items-center">
@@ -117,7 +120,7 @@ export default function PlayServerSection({ resource, playersOnline, region, add
                 </svg>
               ) : (
                 <svg
-                  className="h-3.5 w-3.5 shrink-0 text-gray-500 opacity-0 transition-opacity duration-150 group-hover:opacity-50"
+                  className="h-3.5 w-3.5 shrink-0 text-gray-500 opacity-50 transition-opacity duration-150 group-hover:opacity-80"
                   fill="none"
                   stroke="currentColor"
                   strokeLinecap="round"

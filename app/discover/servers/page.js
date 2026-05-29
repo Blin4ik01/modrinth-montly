@@ -10,17 +10,20 @@ import ReloadButton from '@/app/components/ReloadButton'
 import SearchInput from '@/app/components/SearchInput'
 import CatalogSearchBlockedNote from '@/app/components/CatalogSearchBlockedNote'
 import ResourceList from '@/app/components/ResourceList'
+import { buildServerCatalogSeo } from '@/lib/serverCatalogSeo'
 
 export async function generateMetadata({ searchParams }) {
-  const page = parseInt(searchParams?.page || '1');
-  const title = page > 1 
-    ? `Minecraft серверы - Список серверов (стр. ${page}) | ModrinthProxy`
-    : 'Minecraft серверы - Список серверов | ModrinthProxy';
-  
+  const { title, description } = buildServerCatalogSeo({ searchParams })
+
   return {
     title,
-    description: 'Каталог Minecraft серверов. Выберите лучший сервер для игры в Minecraft. IP-адреса, версии, подробные описания.',
-  };
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+  }
 }
 
 export default async function ServersPage({ searchParams }) {
@@ -53,6 +56,8 @@ export default async function ServersPage({ searchParams }) {
     console.error('Failed to load Minecraft versions:', error);
   }
   
+  const catalogSeo = buildServerCatalogSeo({ searchParams })
+
   const scParams = Array.isArray(searchParams.sc) ? searchParams.sc : (searchParams.sc ? [searchParams.sc] : []);
   const sctParams = Array.isArray(searchParams.sct) ? searchParams.sct : (searchParams.sct ? [searchParams.sct] : []);
   const fParams = Array.isArray(searchParams.f) ? searchParams.f : (searchParams.f ? [searchParams.f] : []);
@@ -274,10 +279,10 @@ export default async function ServersPage({ searchParams }) {
         <ServerSidebarFilters initialVersions={mcVersions} />
         <div className="flex-1 min-w-0">
           <div className="flex flex-col gap-4 mb-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">Minecraft серверы</h1>
-                <p className="text-gray-400 text-sm md:text-base">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-2xl md:text-3xl font-bold">{catalogSeo.heading}</h1>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                <p className="text-gray-400 text-sm md:text-base shrink-0">
                   {data ? (
                     <>
                       {data.total_hits.toLocaleString('ru-RU')} серверов найдено
@@ -287,12 +292,14 @@ export default async function ServersPage({ searchParams }) {
                     'Загрузка...'
                   )}
                 </p>
+                <div className="w-full sm:max-w-md sm:flex-1 sm:min-w-[220px]">
+                  <SearchInput
+                    defaultValue={query}
+                    placeholder="Поиск серверов..."
+                    categoryPath="discover/servers"
+                  />
+                </div>
               </div>
-              <SearchInput 
-                defaultValue={query}
-                placeholder="Поиск серверов..."
-                categoryPath="discover/servers"
-              />
             </div>
             
             <div className="flex flex-col gap-2">

@@ -44,9 +44,7 @@ function ServerAddressCopy({ address, tooltip, variant = 'prominent' }) {
 
   const copyIconClass = copied
     ? 'h-3.5 w-3.5 shrink-0 text-modrinth-green'
-    : subtle
-      ? 'h-3.5 w-3.5 shrink-0 text-gray-500 opacity-50 transition-opacity duration-150 group-hover:opacity-80'
-      : 'h-3.5 w-3.5 shrink-0 text-gray-500 opacity-0 transition-opacity duration-150 group-hover:opacity-50'
+    : 'h-3.5 w-3.5 shrink-0 text-gray-500 opacity-50 transition-opacity duration-150 group-hover:opacity-80'
 
   return (
     <StyledTooltip label={copied ? 'Скопировано' : tooltip}>
@@ -331,7 +329,9 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
       {pingData?.version_name && (
         <div className="flex flex-col gap-1.5 pt-3 border-t border-gray-850/80">
           <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Ядро / Версия</span>
-          <span className="text-xs font-semibold text-gray-400">{pingData.version_name}</span>
+          <StyledTooltip label="Ядро на котором работает сервер">
+            <span className="text-xs font-semibold text-gray-400 cursor-help w-fit">{pingData.version_name}</span>
+          </StyledTooltip>
         </div>
       )}
     </div>

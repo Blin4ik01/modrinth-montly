@@ -10,8 +10,8 @@ import MinePluginCheckPromo, { DownloadPromoConnector } from './MinePluginCheckP
 import AuthorPluginPromo from './AuthorPluginPromo'
 import CopyButton from './CopyButton'
 import PlayServerSection from './PlayServerSection'
-import { getServerCategoryName } from '@/lib/serverCategories'
 import StyledTooltip from './StyledTooltip'
+import ServerCategoryTagsRow from './ServerCategoryTagsRow'
 
 const MINEPLUGIN_PROMO_MAX_DOWNLOADS = 100_000
 
@@ -110,7 +110,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
               <h1 className="text-2xl md:text-3xl font-bold mb-2">{resource.title}</h1>
               <p className="text-gray-700 dark:text-gray-300 mb-3 text-sm md:text-base">{resource.description}</p>
               
-              <div className={`${isServer ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm`}>
+              <div className={`${isServer ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-3 md:gap-4 w-full text-xs md:text-sm`}>
                 {isServer ? (
                   <>
                      {playersOnline != null && (
@@ -159,26 +159,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
                       </div>
                     )}
                     {allResourceCategories.length > 0 && (
-                      <div className="hidden sm:flex flex-wrap gap-1.5 ml-2">
-                        {allResourceCategories.slice(0, 4).map((catId) => {
-                          try {
-                            if (!catId || typeof catId !== 'string') return null
-                            const displayName = getServerCategoryName(catId)
-                            return (
-                              <Link
-                                key={catId}
-                                href={`/discover/servers?sc=${catId}`}
-                                className="px-2.5 py-1 text-xs font-semibold rounded-full border border-gray-700/50 hover:border-modrinth-green/30 bg-gray-800/40 hover:bg-gray-800 hover:text-white transition-all duration-300"
-                                style={{ color: 'var(--text-muted)' }}
-                              >
-                                <span>{displayName}</span>
-                              </Link>
-                            )
-                          } catch (e) {
-                            return null
-                          }
-                        })}
-                      </div>
+                      <ServerCategoryTagsRow categoryIds={allResourceCategories} maxVisible={3} />
                     )}
                   </>
                 ) : (
