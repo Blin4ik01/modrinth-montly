@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 
 import { SERVER_REGIONS } from '@/lib/serverCategories'
+import StyledTooltip from './StyledTooltip'
 
 const mapRegion = (region) => {
   if (!region) return ''
@@ -86,15 +87,51 @@ export default function PlayServerSection({ resource, playersOnline, region, add
             <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">или</span>
             <div className="flex-1 h-[1px] bg-gray-700/40"></div>
           </div>
-          <button
-            onClick={handleCopy}
-            className="w-full bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/50 hover:border-modrinth-green/30 flex gap-2 justify-between rounded-xl items-center px-4 h-10 cursor-pointer transition-all duration-300 active:scale-[0.98] group"
-          >
-            <span className="font-semibold text-white truncate text-sm">{address}</span>
-            <span className="text-xs font-semibold text-gray-400 group-hover:text-white transition-colors bg-gray-900/40 px-2 py-0.5 rounded-md flex-shrink-0">
-              {copied ? 'Скопировано!' : 'Копировать'}
-            </span>
-          </button>
+          <StyledTooltip label={copied ? 'Скопировано' : 'Скопировать адрес'}>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="group flex w-full min-w-0 items-center justify-center gap-2 py-1 text-center outline-none"
+            >
+              <span
+                className={`min-w-0 truncate font-mono text-sm leading-snug transition-colors duration-150 ${
+                  copied
+                    ? 'text-modrinth-green'
+                    : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]'
+                }`}
+              >
+                {address}
+              </span>
+              {copied ? (
+                <svg
+                  className="h-3.5 w-3.5 shrink-0 text-modrinth-green"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              ) : (
+                <svg
+                  className="h-3.5 w-3.5 shrink-0 text-gray-500 opacity-0 transition-opacity duration-150 group-hover:opacity-50"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                </svg>
+              )}
+            </button>
+          </StyledTooltip>
         </div>
       )}
 

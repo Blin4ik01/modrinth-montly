@@ -84,7 +84,7 @@ export default async function ModVersionsPage({ params, searchParams }) {
     mod = filterModContent(mod);
     teamMembers = filterTeamMembers(teamMembers);
     
-    if (isOrganizationBlocked(mod.organization)) {
+    if ((isProjectBlocked(mod.slug, mod.id) || isOrganizationBlocked(mod.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

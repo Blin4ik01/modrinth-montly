@@ -10,6 +10,8 @@ import MinePluginCheckPromo, { DownloadPromoConnector } from './MinePluginCheckP
 import AuthorPluginPromo from './AuthorPluginPromo'
 import CopyButton from './CopyButton'
 import PlayServerSection from './PlayServerSection'
+import { getServerCategoryName } from '@/lib/serverCategories'
+import StyledTooltip from './StyledTooltip'
 
 const MINEPLUGIN_PROMO_MAX_DOWNLOADS = 100_000
 
@@ -49,7 +51,8 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
   const isServer = contentType === 'server' || contentType === 'servers' || resource.project_type === 'minecraft_java_server'
   
   const playersOnline = resource.minecraft_java_server?.ping?.data?.players_online ?? resource.minecraft_java_server?.ping?.players_online
-  const recentPlays = resource.minecraft_java_server?.verified_plays_2w ?? resource.verified_plays_2w
+  const plays2w = resource.minecraft_java_server?.verified_plays_2w ?? resource.verified_plays_2w
+  const plays4w = resource.minecraft_java_server?.verified_plays_4w ?? resource.verified_plays_4w
   
   let allCategories = CATEGORIES
   if (contentType === 'resourcepack' || contentType === 'resourcepacks') {
@@ -110,30 +113,49 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
               <div className={`${isServer ? 'flex' : 'hidden lg:flex'} flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm`}>
                 {isServer ? (
                   <>
-                    {playersOnline != null && (
-                      <div className="flex items-center gap-1.5 text-green-500 font-semibold bg-green-500/10 border border-green-500/25 px-2.5 py-1 rounded-full text-xs md:text-sm">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <span>{playersOnline} в сети</span>
-                      </div>
+                     {playersOnline != null && (
+                      <StyledTooltip label={(() => {
+                        const count = playersOnline
+                        const mod10 = count % 10
+                        const mod100 = count % 100
+                        if (mod100 >= 11 && mod100 <= 19) {
+                          return `${count.toLocaleString('ru-RU')} игроков сейчас играют`
+                        }
+                        if (mod10 === 1) {
+                          return `${count.toLocaleString('ru-RU')} игрок сейчас играет`
+                        }
+                        if (mod10 >= 2 && mod10 <= 4) {
+                          return `${count.toLocaleString('ru-RU')} игрока сейчас играют`
+                        }
+                        return `${count.toLocaleString('ru-RU')} игроков сейчас играют`
+                      })()}>
+                        <div className="flex items-center gap-1.5 text-green-500 font-semibold bg-green-500/10 border border-green-500/25 px-2.5 py-1 rounded-full text-xs md:text-sm cursor-help hover:brightness-110 transition-all select-none">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                          </span>
+                          <span>{playersOnline.toLocaleString('ru-RU')} в сети</span>
+                        </div>
+                      </StyledTooltip>
                     )}
-                    {recentPlays != null && (
+                    {(plays2w != null || plays4w != null) && (
                       <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 bg-gray-800/40 border border-gray-700/35 px-2.5 py-1 rounded-full text-xs md:text-sm">
-                        <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path d="m5 3 14 9-14 9z"></path>
+                        <svg className="w-5 h-5 text-gray-500 shrink-0 relative -translate-y-[2px]" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
+                          <path d="M4.5 16.5c-1.5 1.25-2.5 3.5-2.5 3.5s2.25-1 3.5-2.5M14 8.5c.07-.07.14-.15.22-.22a6.5 6.5 0 1 0-9.19 9.19c.07-.07.15-.14.22-.22M18.5 5.5c1.5-1.25 2.5-3.5 2.5-3.5s-2.25 1-3.5 2.5M11.5 12.5 17 7M9.5 14.5l-5.5 5.5" />
                         </svg>
-                        <span className="font-semibold text-gray-900 dark:text-white">
-                          {recentPlays.toLocaleString('ru-RU')} {(() => {
-                            const mod10 = recentPlays % 10
-                            const mod100 = recentPlays % 100
-                            if (mod100 >= 11 && mod100 <= 19) return 'недавних запусков'
-                            if (mod10 === 1) return 'недавний запуск'
-                            if (mod10 >= 2 && mod10 <= 4) return 'недавних запуска'
-                            return 'недавних запусков'
-                          })()}
-                        </span>
+                        <div className="flex items-center">
+                          <StyledTooltip label={`${(plays2w || 0).toLocaleString('ru-RU')} запусков через Modrinth App за последние 2 недели`}>
+                            <span className="font-semibold text-gray-900 dark:text-white cursor-help hover:text-modrinth-green transition-colors">
+                              {(plays2w || 0).toLocaleString('ru-RU')}
+                            </span>
+                          </StyledTooltip>
+                          <span className="text-gray-500 mx-1.5 select-none">|</span>
+                          <StyledTooltip label={`${(plays4w || 0).toLocaleString('ru-RU')} запусков через Modrinth App за последний месяц`}>
+                            <span className="font-semibold text-gray-900 dark:text-white cursor-help hover:text-modrinth-green transition-colors">
+                              {(plays4w || 0).toLocaleString('ru-RU')}
+                            </span>
+                          </StyledTooltip>
+                        </div>
                       </div>
                     )}
                     {allResourceCategories.length > 0 && (
@@ -141,8 +163,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
                         {allResourceCategories.slice(0, 4).map((catId) => {
                           try {
                             if (!catId || typeof catId !== 'string') return null
-                            const category = allCategories.find(c => c.id === catId)
-                            const displayName = category?.name || catId.charAt(0).toUpperCase() + catId.slice(1)
+                            const displayName = getServerCategoryName(catId)
                             return (
                               <Link
                                 key={catId}

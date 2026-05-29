@@ -211,7 +211,7 @@ export default function ResourceCard({ resource, type = 'mod', forceLayout = nul
   if (isServer) {
     const pingObj = resource.minecraft_java_server?.ping
     const ping = pingObj?.data
-    const playersOnline = ping?.players_online ?? null
+    const playersOnline = ping?.players_online ?? pingObj?.players_online ?? null
     const plays2w = resource.minecraft_java_server?.verified_plays_2w ?? null
     const plays4w = resource.minecraft_java_server?.verified_plays_4w ?? null
     const serverRegion = resource.minecraft_server?.region ?? null

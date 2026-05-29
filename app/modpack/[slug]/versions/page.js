@@ -48,7 +48,7 @@ export default async function ModpackVersionsPage({ params, searchParams }) {
     [modpack, versions, teamMembers] = await Promise.all([getMod(slug), getModVersions(slug), getTeamMembers(slug)]);
     modpack = filterModContent(modpack);
     teamMembers = filterTeamMembers(teamMembers);
-    if (isOrganizationBlocked(modpack.organization)) notFound()
+    if ((isProjectBlocked(modpack.slug, modpack.id) || isOrganizationBlocked(modpack.organization))) notFound()
   } catch (error) {
     notFound()
   }

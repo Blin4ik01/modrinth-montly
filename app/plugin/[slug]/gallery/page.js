@@ -71,7 +71,7 @@ export default async function PluginGalleryPage({ params }) {
       getModVersions(slug),
     ])
     
-    if (isOrganizationBlocked(plugin.organization)) {
+    if ((isProjectBlocked(plugin.slug, plugin.id) || isOrganizationBlocked(plugin.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

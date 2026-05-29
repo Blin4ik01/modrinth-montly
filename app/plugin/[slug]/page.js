@@ -89,7 +89,7 @@ export default async function PluginPage({ params }) {
     plugin = filterModContent(plugin);
     teamMembers = filterTeamMembers(teamMembers);
     
-    if (isOrganizationBlocked(plugin.organization)) {
+    if ((isProjectBlocked(plugin.slug, plugin.id) || isOrganizationBlocked(plugin.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

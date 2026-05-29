@@ -71,7 +71,7 @@ export default async function ResourcepackGalleryPage({ params }) {
       getModVersions(slug),
     ])
     
-    if (isOrganizationBlocked(pack.organization)) {
+    if ((isProjectBlocked(pack.slug, pack.id) || isOrganizationBlocked(pack.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

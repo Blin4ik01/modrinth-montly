@@ -71,7 +71,7 @@ export default async function ModGalleryPage({ params }) {
       getModVersions(slug),
     ])
     
-    if (isOrganizationBlocked(mod.organization)) {
+    if ((isProjectBlocked(mod.slug, mod.id) || isOrganizationBlocked(mod.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

@@ -97,7 +97,7 @@ export default async function ServerPage({ params }) {
       }
     }
 
-    if (isOrganizationBlocked(server.organization)) {
+    if ((isProjectBlocked(server.slug, server.id) || isOrganizationBlocked(server.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">
@@ -274,39 +274,7 @@ export default async function ServerPage({ params }) {
                 ))}
               </div>
             </div>
-          )}
-
-          <div className="bg-modrinth-dark border border-gray-800 rounded-2xl p-4 flex flex-col gap-3 shadow-lg">
-            <h2 className="text-lg font-bold text-white m-0">Сведения</h2>
-            <div className="space-y-3 text-xs md:text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-                  <path d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0" />
-                </svg>
-                <span>{(() => {
-                  const count = server.followers || 0
-                  const mod10 = count % 10
-                  const mod100 = count % 100
-                  let word = 'подписчиков'
-                  if (!(mod100 >= 11 && mod100 <= 19)) {
-                    if (mod10 === 1) word = 'подписчик'
-                    else if (mod10 >= 2 && mod10 <= 4) word = 'подписчика'
-                  }
-                  return `${count} ${word}`
-                })()}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <span>Размещён {formatTimeAgo(server.published || server.created)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          )}        </div>
       </div>
     </div>
   )

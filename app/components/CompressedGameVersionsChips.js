@@ -14,7 +14,11 @@ const chipPlainCls =
 const chipMoreCls =
   'z-[1] inline-flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-full border border-[var(--border-color)] bg-[var(--bg-tertiary)] px-2 py-1 text-sm font-normal leading-none text-[var(--text-muted)] transition-transform hover:underline active:scale-[0.95] outline-none'
 
-function VersionRangeChip({ range, browseRoute, rawVersions }) {
+function versionHref(browseRoute, versionSearchParam, v) {
+  return `/${browseRoute}?${versionSearchParam}=${encodeURIComponent(v)}`
+}
+
+function VersionRangeChip({ range, browseRoute, rawVersions, versionSearchParam, recommendedVersion }) {
   const expanded = versionsForCompressedRange(range, rawVersions)
 
   let tooltipBody
@@ -41,14 +45,17 @@ function VersionRangeChip({ range, browseRoute, rawVersions }) {
         : `Поддерживает ${range}`
 
   const v = facetMcVersionQuery(range, rawVersions)
-  if (v) {
+  const duplicateRecommended =
+    recommendedVersion && v === recommendedVersion && /\.x$/i.test(String(range).trim())
+
+  if (v && !duplicateRecommended) {
     return (
       <StyledTooltip
         label={tooltipBody}
         contentClassName={expanded.length > 1 ? '!max-w-[min(380px,calc(100vw-24px))]' : ''}
       >
         <Link
-          href={`/${browseRoute}?v=${encodeURIComponent(v)}`}
+          href={versionHref(browseRoute, versionSearchParam, v)}
           className={chipLinkCls}
           tabIndex={0}
           aria-label={ariaLabel}
@@ -70,21 +77,50 @@ function VersionRangeChip({ range, browseRoute, rawVersions }) {
   )
 }
 
+function RecommendedVersionChip({ version, browseRoute, versionSearchParam }) {
+  return (
+    <Link
+      href={versionHref(browseRoute, versionSearchParam, version)}
+      className={chipLinkCls}
+    >
+      {version}
+      <span className="text-[var(--text-muted)] opacity-80"> (рекомендуется)</span>
+    </Link>
+  )
+}
+
 export default function CompressedGameVersionsChips({
   browseRoute,
   rawVersions,
   ranges,
   maxVisible = 6,
+  versionSearchParam = 'v',
+  recommendedVersion = null,
+  className = '',
 }) {
-  if (!ranges?.length) return null
+  if (!ranges?.length && !recommendedVersion) return null
 
   const visible = ranges.slice(0, maxVisible)
   const overflow = ranges.length > maxVisible ? ranges.slice(maxVisible) : []
 
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className={`flex flex-wrap gap-2 ${className}`.trim()}>
+      {recommendedVersion && (
+        <RecommendedVersionChip
+          version={recommendedVersion}
+          browseRoute={browseRoute}
+          versionSearchParam={versionSearchParam}
+        />
+      )}
       {visible.map((range, idx) => (
-        <VersionRangeChip key={`${range}-${idx}`} range={range} browseRoute={browseRoute} rawVersions={rawVersions} />
+        <VersionRangeChip
+          key={`${range}-${idx}`}
+          range={range}
+          browseRoute={browseRoute}
+          rawVersions={rawVersions}
+          versionSearchParam={versionSearchParam}
+          recommendedVersion={recommendedVersion}
+        />
       ))}
       {overflow.length > 0 && (
         <Popover.Root>
@@ -113,6 +149,8 @@ export default function CompressedGameVersionsChips({
                     range={range}
                     browseRoute={browseRoute}
                     rawVersions={rawVersions}
+                    versionSearchParam={versionSearchParam}
+                    recommendedVersion={recommendedVersion}
                   />
                 ))}
               </div>

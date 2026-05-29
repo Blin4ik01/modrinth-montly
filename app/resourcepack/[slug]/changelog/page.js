@@ -46,7 +46,7 @@ export default async function ResourcepackChangelogPage({ params }) {
     [pack, versions, teamMembers] = await Promise.all([getMod(slug), getModVersions(slug), getTeamMembers(slug)]);
     pack = filterModContent(pack);
     teamMembers = filterTeamMembers(teamMembers);
-    if (isOrganizationBlocked(pack.organization)) notFound()
+    if ((isProjectBlocked(pack.slug, pack.id) || isOrganizationBlocked(pack.organization))) notFound()
   } catch (error) {
     notFound()
   }

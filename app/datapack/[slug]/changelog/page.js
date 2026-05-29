@@ -61,7 +61,7 @@ export default async function DatapackChangelogPage({ params }) {
     pack = filterModContent(pack);
     teamMembers = filterTeamMembers(teamMembers);
     
-    if (isOrganizationBlocked(pack.organization)) {
+    if ((isProjectBlocked(pack.slug, pack.id) || isOrganizationBlocked(pack.organization))) {
       notFound()
     }
   } catch (error) {

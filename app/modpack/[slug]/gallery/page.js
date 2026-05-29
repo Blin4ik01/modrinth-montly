@@ -71,7 +71,7 @@ export default async function ModpackGalleryPage({ params }) {
       getModVersions(slug),
     ])
     
-    if (isOrganizationBlocked(modpack.organization)) {
+    if ((isProjectBlocked(modpack.slug, modpack.id) || isOrganizationBlocked(modpack.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

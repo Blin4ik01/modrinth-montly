@@ -89,7 +89,7 @@ export default async function ShaderPage({ params }) {
     shader = filterModContent(shader);
     teamMembers = filterTeamMembers(teamMembers);
     
-    if (isOrganizationBlocked(shader.organization)) {
+    if ((isProjectBlocked(shader.slug, shader.id) || isOrganizationBlocked(shader.organization))) {
       return (
         <div className="text-center py-16 max-w-2xl mx-auto">
           <div className="mb-6">

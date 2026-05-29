@@ -642,9 +642,10 @@ html:not(.dark) .top-nav-mobile-links {
   transform: translateX(-50%);
   background: var(--bg-tooltip);
   color: var(--text-primary);
-  padding: 0.4rem 0.6rem;
+  padding: 0.42rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
+  text-align: center;
   white-space: nowrap;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -692,10 +693,11 @@ html:not(.dark) .top-nav-link[data-tooltip]:hover::before {
   z-index: 1100;
   max-width: min(260px, calc(100vw - 24px));
   border-radius: 12px;
-  padding: 0.4rem 0.65rem;
-  font-size: 0.75rem;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.85rem;
   font-weight: 500;
   line-height: 1.35;
+  text-align: center;
   white-space: normal;
   word-break: break-word;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);

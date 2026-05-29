@@ -46,7 +46,7 @@ export default async function ShaderChangelogPage({ params }) {
     [shader, versions, teamMembers] = await Promise.all([getMod(slug), getModVersions(slug), getTeamMembers(slug)]);
     shader = filterModContent(shader);
     teamMembers = filterTeamMembers(teamMembers);
-    if (isOrganizationBlocked(shader.organization)) notFound()
+    if ((isProjectBlocked(shader.slug, shader.id) || isOrganizationBlocked(shader.organization))) notFound()
   } catch (error) {
     notFound()
   }

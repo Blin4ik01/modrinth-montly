@@ -17,7 +17,7 @@ export default async function ProjectBackdropLayoutShell({ slug, children }) {
       project && typeof project === 'object'
         ? (project.organization ?? project.organization_id)
         : undefined
-    if (!isOrganizationBlocked(org)) {
+    if (project && !isProjectBlocked(project.slug, project.id) && !isOrganizationBlocked(org)) {
       backdropSrc = resolveProjectFeaturedBackdropUrl(project)
     }
   } catch {

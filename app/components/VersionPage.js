@@ -141,7 +141,7 @@ class VersionMetadata {
 function MetadataItem({ label, value }) {
   return (
     <div>
-      <h4 className="text-sm font-semibold mb-1.5 text-gray-300">{label}</h4>
+      <h4 className="text-base font-bold mb-1.5 text-[var(--text-gray)]">{label}</h4>
       <div className="text-white text-sm">{value}</div>
     </div>
   )

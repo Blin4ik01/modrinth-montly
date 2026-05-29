@@ -67,7 +67,7 @@ export default async function PluginVersionsPage({ params, searchParams }) {
     plugin = filterModContent(plugin);
     teamMembers = filterTeamMembers(teamMembers);
     
-    if (isOrganizationBlocked(plugin.organization)) {
+    if ((isProjectBlocked(plugin.slug, plugin.id) || isOrganizationBlocked(plugin.organization))) {
       notFound()
     }
   } catch (error) {
