@@ -140,11 +140,16 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
         <div className="space-y-3">
           <div>
             <h3 className={`${SIDEBAR_SECTION_LABEL} mb-2`}>
-              Minecraft: Java Edition
+              {javaAddress && bedrockAddress && javaAddress === bedrockAddress
+                ? 'Minecraft: Java и Bedrock Edition'
+                : 'Minecraft: Java Edition'}
             </h3>
             {javaAddress && (
               <div className="mb-3 pb-3 border-b border-gray-800/70">
-                <ServerAddressCopy address={javaAddress} tooltip="Копировать адрес Java-сервера" />
+                <ServerAddressCopy 
+                  address={javaAddress} 
+                  tooltip={javaAddress === bedrockAddress ? 'Копировать адрес сервера' : 'Копировать адрес Java-сервера'} 
+                />
               </div>
             )}
             {server.minecraft_java_server?.content && server.minecraft_java_server.content.kind !== 'vanilla' && (server.minecraft_java_server.content.project_name || server.minecraft_java_server.content.version_id) && (
@@ -224,7 +229,7 @@ export default function ServerSidebarDetails({ server, requiredContentVersion = 
         </div>
       )}
 
-      {bedrockAddress && (
+      {bedrockAddress && javaAddress !== bedrockAddress && (
         <div className="flex flex-col gap-1.5">
           <h3 className={SIDEBAR_SECTION_LABEL}>
             Minecraft: Bedrock Edition
