@@ -1395,6 +1395,19 @@ button.text-white {
   padding-bottom: 15px;
 }
 
+.modrinth-button-font,
+.modrinth-download-button,
+.modrinth-modal-download-button {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Roboto, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 900;
+  font-variation-settings: 'wght' 900;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
+  font-stretch: 100%;
+}
+
 .modrinth-download-button,
 .modrinth-modal-download-button {
   align-items: center;
@@ -1406,14 +1419,6 @@ button.text-white {
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Roboto, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-weight: 900;
-  font-variation-settings: 'wght' 900;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  letter-spacing: -0.01em;
-  font-stretch: 100%;
   gap: 0.5rem;
   height: 3rem;
   justify-content: center;

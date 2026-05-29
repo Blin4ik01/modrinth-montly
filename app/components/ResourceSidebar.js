@@ -5,11 +5,6 @@ import { LOADERS } from '@/lib/loaders'
 import { compressSidebarGameVersions } from '@/lib/minecraftVersionSort'
 import CompressedGameVersionsChips from './CompressedGameVersionsChips'
 import CopyButton from './CopyButton'
-import {
-  SIDEBAR_CARD_TITLE,
-  SIDEBAR_META_LABEL,
-  SIDEBAR_SECTION_LABEL,
-} from '@/lib/sidebarTypography'
 
 export default function ResourceSidebar({ resource, teamMembers = [], contentType = null }) {
   const gameVersions = resource.minecraft_java_server?.content?.supported_game_versions || resource.game_versions || []
@@ -24,7 +19,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
     <div className="space-y-4">
       {(gameVersions.length > 0 || loaders.length > 0 || environment) && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
-          <h3 className={SIDEBAR_CARD_TITLE}>
+          <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
             <svg className="w-4 h-4 text-modrinth-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -34,7 +29,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
           <div className="space-y-3">
             {gameVersions.length > 0 && (
               <div>
-                <h3 className={`${SIDEBAR_SECTION_LABEL} mb-2`}>Minecraft: Java Edition</h3>
+                <h3 className="text-base font-bold m-0 mb-2 text-[var(--text-gray)]">Minecraft: Java Edition</h3>
                 <CompressedGameVersionsChips
                   browseRoute={browseRoute}
                   rawVersions={gameVersions}
@@ -46,7 +41,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
             {loaders.length > 0 && (
               <div>
-                <h3 className={`${SIDEBAR_SECTION_LABEL} mb-2`}>Платформы</h3>
+                <h3 className="text-base font-bold m-0 mb-2 text-[var(--text-gray)]">Платформы</h3>
                 <div className="flex flex-wrap gap-2">
                   {loaders.map((loaderId) => {
                     const loader = LOADERS.find(l => l.id === loaderId)
@@ -83,7 +78,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
             {environment && (
               <div>
-                <h3 className={`${SIDEBAR_SECTION_LABEL} mb-2`}>Поддерживаемые окружения</h3>
+                <h3 className="text-base font-bold m-0 mb-2 text-[var(--text-gray)]">Поддерживаемые окружения</h3>
                 <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-200 dark:bg-gray-800 rounded-lg w-fit">
                   <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -99,7 +94,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
       {resource.project_type === 'minecraft_java_server' && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
-          <h3 className={SIDEBAR_CARD_TITLE}>
+          <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
             <svg className="w-4 h-4 text-modrinth-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 012-2h10a2 2 0 012 2m-14 0a2 2 0 002 2h10a2 2 0 002-2M7 8l-2 2 2 2m8-4l2 2-2 2" />
             </svg>
@@ -108,19 +103,19 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
           <div className="space-y-3 text-xs md:text-sm">
             {resource.minecraft_server?.region && (
               <div className="flex justify-between border-b border-gray-800 pb-1.5">
-                <span className={SIDEBAR_META_LABEL}>Регион</span>
+                <span className="font-semibold text-[var(--text-gray)]">Регион</span>
                 <span className="font-semibold text-white uppercase">{resource.minecraft_server.region}</span>
               </div>
             )}
             {resource.minecraft_server?.languages && resource.minecraft_server.languages.length > 0 && (
               <div className="flex justify-between border-b border-gray-800 pb-1.5">
-                <span className={SIDEBAR_META_LABEL}>Языки</span>
+                <span className="font-semibold text-[var(--text-gray)]">Языки</span>
                 <span className="font-semibold text-white uppercase">{resource.minecraft_server.languages.join(', ')}</span>
               </div>
             )}
             {(resource.minecraft_java_server?.ping?.data?.version_name ?? resource.minecraft_java_server?.ping?.version_name) && (
               <div className="flex justify-between border-b border-gray-800 pb-1.5">
-                <span className={SIDEBAR_META_LABEL}>Ядро/Версия</span>
+                <span className="font-semibold text-[var(--text-gray)]">Ядро/Версия</span>
                 <span className="font-semibold text-white text-right truncate max-w-[160px]">{resource.minecraft_java_server.ping.data?.version_name ?? resource.minecraft_java_server.ping.version_name}</span>
               </div>
             )}
@@ -130,7 +125,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
       {(resource.discord_url || resource.source_url || resource.wiki_url || resource.issues_url || (resource.donation_urls && resource.donation_urls.length > 0)) && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
-          <h3 className={SIDEBAR_CARD_TITLE}>
+          <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
             <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
@@ -204,7 +199,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
       {teamMembers.length > 0 && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
-          <h3 className={SIDEBAR_CARD_TITLE}>
+          <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
             <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -239,7 +234,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
       )}
 
       <div className="bg-modrinth-dark border border-gray-800 rounded-lg p-4">
-        <h3 className={SIDEBAR_CARD_TITLE}>
+        <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
           <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -248,25 +243,25 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
         <div className="space-y-2 text-sm">
           {resource.license && resource.license.id && (
             <div>
-              <span className={SIDEBAR_META_LABEL}>Лицензия:</span>
+              <span className="font-semibold text-[var(--text-gray)]">Лицензия:</span>
               <span className="text-[var(--text-primary)] ml-1 font-medium">{resource.license.id}</span>
             </div>
           )}
           {resource.published && (
             <div>
-              <span className={SIDEBAR_META_LABEL}>Опубликован:</span>
+              <span className="font-semibold text-[var(--text-gray)]">Опубликован:</span>
               <span className="text-[var(--text-primary)] ml-1">{formatTimeAgo(resource.published)}</span>
             </div>
           )}
           {resource.updated && (
             <div>
-              <span className={SIDEBAR_META_LABEL}>Обновлён:</span>
+              <span className="font-semibold text-[var(--text-gray)]">Обновлён:</span>
               <span className="text-[var(--text-primary)] ml-1">{formatTimeAgo(resource.updated)}</span>
             </div>
           )}
           {projectId && (
             <div className="flex flex-wrap items-center gap-1">
-              <span className={SIDEBAR_META_LABEL}>ID проекта:</span>
+              <span className="font-semibold text-[var(--text-gray)]">ID проекта:</span>
               <CopyButton text={projectId} inline />
             </div>
           )}
