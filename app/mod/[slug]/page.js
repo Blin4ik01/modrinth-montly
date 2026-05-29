@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { getMod, getModVersions, getTeamMembers } from '@/lib/modrinth'
 import { filterModContent, filterTeamMembers, isProjectBlocked, isOrganizationBlocked } from '@/lib/contentFilter'
 import ResourceSidebar from '@/app/components/ResourceSidebar'
@@ -12,6 +12,9 @@ import rehypeRaw from 'rehype-raw'
 export async function generateMetadata({ params }) {
   try {
     const mod = await getMod(params.slug)
+    if (mod.project_type === 'minecraft_java_server') {
+      permanentRedirect(`/server/${params.slug}`)
+    }
     const url = `https://modrinth.black/mod/${params.slug}`
     const fullDescription = mod.description || `Скачать ${mod.title} для Minecraft. ${formatDownloads(mod.downloads)} загрузок. Поддержка версий: ${mod.game_versions?.slice(0, 3).join(', ')}.`
     
@@ -88,6 +91,10 @@ export default async function ModPage({ params }) {
     
     mod = filterModContent(mod);
     teamMembers = filterTeamMembers(teamMembers);
+
+    if (mod.project_type === 'minecraft_java_server') {
+      permanentRedirect(`/server/${slug}`)
+    }
     
     if ((isProjectBlocked(mod.slug, mod.id) || isOrganizationBlocked(mod.organization))) {
       return (

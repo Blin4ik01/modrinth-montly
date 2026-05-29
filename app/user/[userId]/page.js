@@ -70,7 +70,7 @@ export default async function UserPage({ params, searchParams }) {
     )
   }
   
-  let author, projects
+  let author, projects, stats
   try {
     author = await getAuthorInfo(userId)
     
@@ -78,17 +78,22 @@ export default async function UserPage({ params, searchParams }) {
       notFound()
     }
     
-    projects = await getAuthorProjects(author.id, { projectType })
-    const filteredProjects = filterModsList(projects.hits)
-    projects.hits = filteredProjects.hits.map(project => ({
-      ...filterModContent(project),
-      author: author.username
-    }))
+    const allProjects = await getAuthorProjects(author.id, {})
+    stats = formatAuthorStats(author, allProjects.hits)
+    const byType = projectType
+      ? allProjects.hits.filter((project) => project.project_type === projectType)
+      : allProjects.hits
+    const filteredProjects = filterModsList(byType)
+    projects = {
+      hits: filteredProjects.hits.map((project) => ({
+        ...filterModContent(project),
+        author: author.username,
+      })),
+      total_hits: filteredProjects.hits.length,
+    }
   } catch (error) {
     notFound()
   }
-
-  const stats = formatAuthorStats(author, projects.hits)
 
   return (
     <div className="max-w-7xl mx-auto">
