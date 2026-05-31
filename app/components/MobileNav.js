@@ -18,7 +18,6 @@ export default function MobileNav({ onFilterClick }) {
     if (path === '/datapacks') return pathname.startsWith('/datapacks') || pathname.startsWith('/discover/datapacks') || pathname.startsWith('/datapack/')
     if (path === '/modpacks') return pathname.startsWith('/modpacks') || pathname.startsWith('/discover/modpacks') || pathname.startsWith('/modpack/')
     if (path === '/app') return pathname.startsWith('/app') || pathname.startsWith('/launcher')
-    if (path === '/news') return pathname.startsWith('/news')
     return false
   }
 
@@ -144,12 +143,6 @@ export default function MobileNav({ onFilterClick }) {
         </g>
       </svg>,
       color: 'from-indigo-500 to-purple-500' 
-    },
-    { 
-      href: '/news', 
-      label: 'Новости', 
-      icon: <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"></path></svg>,
-      color: 'from-yellow-500 to-amber-500' 
     },
   ]
 
