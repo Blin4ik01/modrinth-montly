@@ -6,6 +6,7 @@ import StyledTooltip from '../components/StyledTooltip'
 import Lottie from 'lottie-react'
 import fixAnimation from '@/public/animations/fix.json'
 import { PALETTES } from '../../lib/paletteManager'
+import SettingsNav from './SettingsNav'
 
 const DEFAULT_LAYOUTS = {
   mods: 'rows',
@@ -134,8 +135,10 @@ export default function SettingsClient() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="universal-card" aria-labelledby="color-theme-heading">
+    <div className="flex flex-col lg:flex-row gap-6">
+      <SettingsNav />
+      <div className="flex-1 min-w-0 space-y-6">
+      <section id="settings-color-theme" className="universal-card settings-section" aria-labelledby="color-theme-heading">
         <h2 id="color-theme-heading" className="text-xl font-bold text-white mb-1">Цветовая тема</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">Выберите предпочтительную цветовую тему для ModrinthProxy на этом устройстве.</p>
         
@@ -226,7 +229,7 @@ export default function SettingsClient() {
         </div>
       </section>
 
-      <section className="universal-card" aria-labelledby="color-palette-heading">
+      <section id="settings-color-palette" className="universal-card settings-section" aria-labelledby="color-palette-heading">
         <h2 id="color-palette-heading" className="text-xl font-bold text-white mb-1">Акцентный цвет</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">
           Цветовая часть айдентики — кнопки, ссылки, подсветка. Не весь образ сайта, только палитра.
@@ -301,7 +304,7 @@ export default function SettingsClient() {
         </div>
       </section>
 
-      <section className="universal-card" aria-labelledby="toggle-features-heading">
+      <section id="settings-features" className="universal-card settings-section" aria-labelledby="toggle-features-heading">
         <h2 id="toggle-features-heading" className="text-xl font-bold text-white mb-1">Настройка функций</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">Включение или отключение определенных функций на этом устройстве.</p>
         
@@ -402,7 +405,7 @@ export default function SettingsClient() {
         </div>
       </section>
 
-      <section className="universal-card" aria-labelledby="project-layouts-heading">
+      <section id="settings-project-layouts" className="universal-card settings-section" aria-labelledby="project-layouts-heading">
         <h2 id="project-layouts-heading" className="text-xl font-bold text-white mb-1">Отображение списков проектов</h2>
         <p className="text-gray-400 mb-6 text-xs md:text-sm">Выберите предпочтительный вид отображения списков проектов для каждой страницы на этом устройстве.</p>
         
@@ -510,6 +513,7 @@ export default function SettingsClient() {
           )}
         </button>
       </section>
+      </div>
     </div>
   )
 }

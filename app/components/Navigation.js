@@ -3,8 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import NewsCounter from './NewsCounter'
-
 export default function Navigation() {
   const pathname = usePathname()
   const [indicator, setIndicator] = useState({ left: 0, width: 0, height: 0, opacity: 0, color: 'modrinth-green' })
@@ -22,7 +20,6 @@ export default function Navigation() {
     if (path.startsWith('/discover/plugins') || path.startsWith('/plugins') || path.startsWith('/plugin/')) return 'blue'
     if (path.startsWith('/discover/servers') || path.startsWith('/servers') || path.startsWith('/server/')) return 'server'
     if (path.startsWith('/app') || path.startsWith('/launcher')) return 'emerald'
-    if (path.startsWith('/news')) return 'yellow'
     return 'modrinth-green'
   }
 
@@ -305,22 +302,6 @@ export default function Navigation() {
             </g>
           </svg>
           <span>Modrinth App</span>
-        </span>
-      </Link>
-      
-      <Link 
-        ref={el => linksRef.current['/news'] = el}
-        href="/news" 
-        className="group relative px-2.5 md:px-4 py-2 rounded-lg transition-all duration-300 whitespace-nowrap z-10 hover:bg-yellow-500/10 dark:hover:bg-yellow-500/10 hover:bg-yellow-200/30 dark:hover:bg-yellow-500/10">
-        <span className={`text-xs md:text-sm font-semibold transition-colors flex items-center gap-1.5 relative ${isActive('/news') ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-700 dark:text-gray-300 group-hover:text-yellow-600 dark:group-hover:text-yellow-400'}`}>
-          <svg className="hidden sm:inline w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
-            <path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"></path>
-          </svg>
-          <span className="relative">
-            Новости
-            <NewsCounter />
-          </span>
         </span>
       </Link>
     </div>

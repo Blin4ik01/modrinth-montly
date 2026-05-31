@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function SettingsPage() {
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-7xl mx-auto py-8">
       <h1 className="text-3xl font-extrabold text-white mb-2" id="settings-title">Настройки</h1>
       <p className="text-gray-400 mb-8 text-sm md:text-base">Персонализируйте отображение каталогов и функции на этом устройстве.</p>
       <SettingsClient />

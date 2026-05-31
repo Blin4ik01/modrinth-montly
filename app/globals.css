@@ -634,6 +634,21 @@ html:not(.dark) .top-nav-mobile-links {
   user-select: none;
 }
 
+.top-nav-link--icon {
+  padding: 0.5rem;
+  gap: 0;
+  color: #9ca3af;
+}
+
+.top-nav-link--icon.top-nav-link--active {
+  color: var(--color-green);
+  background: rgba(31, 41, 55, 0.4);
+}
+
+html:not(.dark) .top-nav-link--icon.top-nav-link--active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
 .top-nav-link[data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -761,6 +776,7 @@ html:not(.dark) .top-nav-link:hover {
 
 html {
   scroll-behavior: smooth;
+  font-size: 106.25%;
 }
 
 body {
@@ -1849,6 +1865,10 @@ input[type="url"]:-webkit-autofill {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 24px;
+}
+
+.settings-section {
+  scroll-margin-top: 1rem;
 }
 
 .project-lists {
