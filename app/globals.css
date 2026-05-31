@@ -2149,6 +2149,62 @@ button svg *[fill="#ec7fab"] {
   background-color: rgba(var(--color-green-rgb), 0.18) !important;
 }
 
+.dependency-explorer-canvas {
+  height: 580px;
+  background: #111111;
+}
+
+.dependency-explorer-legend {
+  background: rgba(20, 20, 20, 0.92);
+  border: 1px solid #2e2e2e;
+}
+
+.dependency-explorer-pulse {
+  animation: dependency-explorer-pulse 2.4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes dependency-explorer-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.08);
+  }
+}
+
+.dependency-explorer-node .dependency-explorer-hover-ring {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.dependency-explorer-node:hover .dependency-explorer-hover-ring {
+  opacity: 1;
+}
+
+.dependency-explorer-node:hover .dependency-explorer-nav-label {
+  text-decoration: underline;
+}
+
+.dependency-explorer-spinner {
+  animation: dependency-explorer-spin 0.8s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes dependency-explorer-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 html.hide-disclaimer-badge .disclaimer-badge {
   display: none !important;
 }

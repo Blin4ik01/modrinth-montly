@@ -1,16 +1,85 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { compareMinecraftVersionsDesc } from '@/lib/minecraftVersionSort'
 import { resolveModrinthProjectAccent } from '@/lib/modrinth'
 import StyledTooltip from './StyledTooltip'
 import { favoritesManager } from '@/lib/favoritesManager'
+import { FABRIC_API_PROJECT_ID, isFabricApiProject } from '@/lib/fabricApi'
 import { versionChannelLetterRingClass } from '@/lib/versionChannelStyles'
 import Lottie from 'lottie-react'
 import bookmarkAnimation from '@/public/animations/bookmark.json'
 import noBookmarkAnimation from '@/public/animations/no_bookmark.json'
+
+let fabricApiProjectCache = null
+
+function FabricApiNotice() {
+  const [project, setProject] = useState(fabricApiProjectCache)
+
+  useEffect(() => {
+    if (fabricApiProjectCache) {
+      setProject(fabricApiProjectCache)
+      return undefined
+    }
+
+    let cancelled = false
+    fetch(`/api/dependencies/project?id=${encodeURIComponent(FABRIC_API_PROJECT_ID)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return
+        fabricApiProjectCache = data
+        setProject(data)
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (!project?.slug) return null
+
+  return (
+    <Link
+      href={`/mod/${project.slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mb-2 flex w-fit max-w-full items-center gap-2.5 rounded-xl border border-gray-200/70 bg-gray-50/80 px-2.5 py-2 text-left no-underline dark:border-[#2e3035] dark:bg-[#16181c]/80"
+    >
+      {project.icon_url ? (
+        <img
+          src={project.icon_url}
+          alt=""
+          className="size-7 shrink-0 rounded-[6px] object-cover ring-1 ring-black/10 dark:ring-white/10"
+        />
+      ) : (
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-gray-200 text-[10px] font-bold text-gray-500 dark:bg-[#2e3035]">
+          F
+        </span>
+      )}
+      <span className="min-w-0">
+        <span className="block text-[10px] leading-tight text-gray-500 dark:text-gray-500">
+          Не забудьте установить
+        </span>
+        <span className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+          {project.title || 'Fabric API'}
+        </span>
+      </span>
+      <svg
+        className="size-3.5 shrink-0 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </Link>
+  )
+}
 
 function LottieStar({ isFavorite, animationData, onClick, label, alwaysVisible = false }) {
   const lottieRef = useRef(null)
@@ -694,25 +763,30 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
                   </div>
                   
                   {selectedLoader ? (
-                    <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-[#16181c] rounded-xl text-sm text-gray-900 dark:text-gray-200 font-medium animate-fade-in">
-                      <LottieStar
-                        isFavorite={favLoader === selectedLoader}
-                        alwaysVisible={true}
-                        animationData={favLoader === selectedLoader ? noBookmarkAnimation : bookmarkAnimation}
-                        onClick={() => toggleFavoriteLoader(selectedLoader)}
-                        label={
-                          favLoader === selectedLoader ? (
-                            'Убрать из избранного'
-                          ) : (
-                            <span className="flex flex-col items-center">
-                              <span>Сделать избранным загрузчиком</span>
-                              <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
-                            </span>
-                          )
-                        }
-                      />
-                      <span>{getLoaderName(selectedLoader)}</span>
-                    </div>
+                    <>
+                      <div className="mb-2 flex items-center w-fit gap-1.5 px-2.5 py-1 bg-gray-50 dark:bg-[#16181c] rounded-xl text-sm text-gray-900 dark:text-gray-200 font-medium animate-fade-in">
+                        <LottieStar
+                          isFavorite={favLoader === selectedLoader}
+                          alwaysVisible={true}
+                          animationData={favLoader === selectedLoader ? noBookmarkAnimation : bookmarkAnimation}
+                          onClick={() => toggleFavoriteLoader(selectedLoader)}
+                          label={
+                            favLoader === selectedLoader ? (
+                              'Убрать из избранного'
+                            ) : (
+                              <span className="flex flex-col items-center">
+                                <span>Сделать избранным загрузчиком</span>
+                                <span className="text-[10px] opacity-60 font-normal mt-0.5">(будет в будущем выбираться автоматически)</span>
+                              </span>
+                            )
+                          }
+                        />
+                        <span>{getLoaderName(selectedLoader)}</span>
+                      </div>
+                      {selectedLoader === 'fabric' && !isFabricApiProject(mod) && (
+                        <FabricApiNotice />
+                      )}
+                    </>
                   ) : (
                     <div className="space-y-1">
                       {loaders.map((loader, i) => (

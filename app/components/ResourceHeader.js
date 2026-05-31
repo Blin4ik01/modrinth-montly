@@ -13,6 +13,7 @@ import CopyButton from './CopyButton'
 import PlayServerSection from './PlayServerSection'
 import StyledTooltip from './StyledTooltip'
 import ServerCategoryTagsRow from './ServerCategoryTagsRow'
+import ProjectActivityBackground from './ProjectActivityBackground'
 
 const MINEPLUGIN_PROMO_MAX_DOWNLOADS = 100_000
 
@@ -97,7 +98,14 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
         <span className="text-gray-900 dark:text-white font-semibold truncate">{resource.title}</span>
       </div>
 
-      <div className="border-b pb-4 md:pb-6 mb-6 md:mb-8" style={{ borderBottomColor: 'var(--bg-tertiary)' }}>
+      <div
+        className="relative mb-6 md:mb-8 overflow-hidden border-b pb-4 md:pb-6"
+        style={{ borderBottomColor: 'var(--bg-tertiary)' }}
+      >
+        {!isServer && (
+          <ProjectActivityBackground versions={versions} />
+        )}
+        <div className="relative z-[1]">
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 lg:items-start">
           <div className="flex gap-3 md:gap-4 flex-1">
             {iconUrl && (
@@ -219,7 +227,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
               />
             ) : (
               <>
-                <div className="w-full lg:flex lg:justify-end">
+                <div className="w-full lg:flex lg:flex-col lg:items-end lg:gap-2">
                   {showPromoBelowDownload ? (
                     <div className="flex flex-col items-center gap-2 lg:inline-flex lg:gap-2">
                       <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
@@ -228,7 +236,6 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
                   ) : (
                     <DownloadModal mod={resource} versions={versions} contentType={contentTypeRoute} />
                   )}
-                </div>
 
                 <div className="mt-3 w-full lg:mt-0">
                   <div className="flex w-full items-center justify-between gap-3 lg:hidden">
@@ -261,6 +268,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
                     )}
                   </div>
                 </div>
+                </div>
               </>
             )}
           </div>
@@ -276,6 +284,7 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
             <MinePluginCheckPromo contentType={contentType} />
           </div>
         )}
+        </div>
       </div>
     </>
   )

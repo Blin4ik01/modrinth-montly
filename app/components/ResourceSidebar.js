@@ -1,10 +1,16 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { LOADERS } from '@/lib/loaders'
 import { compressSidebarGameVersions } from '@/lib/minecraftVersionSort'
 import CompressedGameVersionsChips from './CompressedGameVersionsChips'
 import CopyButton from './CopyButton'
+import CopyLabeledButton from './CopyLabeledButton'
+import ResourceDependenciesSection from './ResourceDependenciesSection'
+import GitHubSidebarSection from './GitHubSidebarSection'
+import { parseGitHubRepoFromSourceUrl } from '@/lib/github'
+import LicenseLink from './LicenseLink'
 
 export default function ResourceSidebar({ resource, teamMembers = [], contentType = null }) {
   const gameVersions = resource.minecraft_java_server?.content?.supported_game_versions || resource.game_versions || []
@@ -14,6 +20,8 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
 
   const environment = getEnvironment(resource.client_side, resource.server_side)
   const projectId = resource.id ?? resource.project_id
+  const hasGitHubSource = Boolean(parseGitHubRepoFromSourceUrl(resource.source_url))
+  const showSourceInLinks = resource.source_url && !hasGitHubSource
 
   return (
     <div className="space-y-4">
@@ -92,6 +100,14 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
         </div>
       )}
 
+      {resource.slug && (
+        <ResourceDependenciesSection
+          projectSlug={resource.slug}
+          projectTitle={resource.title}
+          projectId={resource.id ?? resource.project_id}
+        />
+      )}
+
       {resource.project_type === 'minecraft_java_server' && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
           <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
@@ -123,7 +139,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
         </div>
       )}
 
-      {(resource.discord_url || resource.source_url || resource.wiki_url || resource.issues_url || (resource.donation_urls && resource.donation_urls.length > 0)) && (
+      {(resource.discord_url || showSourceInLinks || resource.wiki_url || resource.issues_url || (resource.donation_urls && resource.donation_urls.length > 0)) && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
           <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
             <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +159,7 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
                 </svg>
               </a>
             )}
-            {resource.source_url && (
+            {showSourceInLinks && (
               <a href={resource.source_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-purple-400 transition-colors group">
                 <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 6l-6 6 6 6M16 18l6-6-6-6" />
@@ -197,6 +213,10 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
         </div>
       )}
 
+      {hasGitHubSource && (
+        <GitHubSidebarSection sourceUrl={resource.source_url} />
+      )}
+
       {teamMembers.length > 0 && (
         <div className="bg-modrinth-dark border border-gray-300 dark:border-gray-800 rounded-lg p-4">
           <h3 className="text-base font-bold m-0 mb-3 flex items-center gap-2 text-[var(--text-primary)]">
@@ -241,10 +261,12 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
           Сведения
         </h3>
         <div className="space-y-2 text-sm">
-          {resource.license && resource.license.id && (
+          {resource.license && (resource.license.id || resource.license.name) && (
             <div>
               <span className="font-semibold text-[var(--text-gray)]">Лицензия:</span>
-              <span className="text-[var(--text-primary)] ml-1 font-medium">{resource.license.id}</span>
+              <span className="ml-1">
+                <LicenseLink license={resource.license} />
+              </span>
             </div>
           )}
           {resource.published && (
@@ -265,8 +287,32 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
               <CopyButton text={projectId} inline />
             </div>
           )}
+          {projectId && (
+            <PermanentLinkCopyButton projectId={projectId} browseRoute={browseRoute} />
+          )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function PermanentLinkCopyButton({ projectId, browseRoute }) {
+  const [url, setUrl] = useState('')
+
+  useEffect(() => {
+    const segment = browseRoute.replace(/s$/, '')
+    setUrl(`${window.location.origin}/${segment}/${projectId}`)
+  }, [browseRoute, projectId])
+
+  if (!url) return null
+
+  return (
+    <div>
+      <CopyLabeledButton
+        text={url}
+        label="Скопировать вечную ссылку"
+        tooltipLabel="Скопировать ссылку по ID проекта в буфер обмена"
+      />
     </div>
   )
 }
