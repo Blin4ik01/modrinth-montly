@@ -7,6 +7,7 @@ import Lottie from 'lottie-react'
 import fixAnimation from '@/public/animations/fix.json'
 import { PALETTES } from '../../lib/paletteManager'
 import SettingsNav from './SettingsNav'
+import SettingsMobileMenu from './SettingsMobileMenu'
 
 const DEFAULT_LAYOUTS = {
   mods: 'rows',
@@ -135,7 +136,9 @@ export default function SettingsClient() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
+    <>
+      <SettingsMobileMenu />
+      <div className="flex flex-col lg:flex-row gap-6">
       <SettingsNav />
       <div className="flex-1 min-w-0 space-y-6">
       <section id="settings-color-theme" className="universal-card settings-section" aria-labelledby="color-theme-heading">
@@ -515,5 +518,6 @@ export default function SettingsClient() {
       </section>
       </div>
     </div>
+    </>
   )
 }

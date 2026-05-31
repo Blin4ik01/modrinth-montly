@@ -19,14 +19,6 @@ function navButtonClass(active) {
   }`
 }
 
-function navPillClass(active) {
-  return `shrink-0 px-3 py-1.5 rounded-lg text-sm transition-colors whitespace-nowrap ${
-    active
-      ? 'bg-[rgba(var(--color-green-rgb),0.15)] text-modrinth-green font-semibold'
-      : 'text-gray-400 hover:text-white bg-modrinth-dark border border-gray-800'
-  }`
-}
-
 function resolveActiveSection() {
   let active = SETTINGS_SECTIONS[0].id
 
@@ -84,43 +76,25 @@ export default function SettingsNav() {
   }
 
   return (
-    <>
-      <div className="hidden lg:block w-80 flex-shrink-0">
-        <div className="lg:sticky lg:top-4 lg:self-start">
-          <div className="bg-modrinth-dark border border-gray-800 rounded-xl p-4">
-            <h2 className="text-sm font-semibold text-gray-300 mb-3">Разделы</h2>
-            <nav className="space-y-1" aria-label="Быстрый переход по настройкам">
-              {SETTINGS_SECTIONS.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollTo(section.id)}
-                  className={navButtonClass(activeId === section.id)}
-                  aria-current={activeId === section.id ? 'true' : undefined}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </nav>
-          </div>
+    <div className="hidden lg:block w-80 flex-shrink-0">
+      <div className="lg:sticky lg:top-4 lg:self-start">
+        <div className="bg-modrinth-dark border border-gray-800 rounded-xl p-4">
+          <h2 className="text-sm font-semibold text-gray-300 mb-3">Разделы</h2>
+          <nav className="space-y-1" aria-label="Быстрый переход по настройкам">
+            {SETTINGS_SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => scrollTo(section.id)}
+                className={navButtonClass(activeId === section.id)}
+                aria-current={activeId === section.id ? 'true' : undefined}
+              >
+                {section.label}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
-
-      <div className="lg:hidden mb-4 overflow-x-auto custom-scrollbar">
-        <nav className="flex gap-2 pb-1 min-w-min" aria-label="Быстрый переход по настройкам">
-          {SETTINGS_SECTIONS.map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              onClick={() => scrollTo(section.id)}
-              className={navPillClass(activeId === section.id)}
-              aria-current={activeId === section.id ? 'true' : undefined}
-            >
-              {section.label}
-            </button>
-          ))}
-        </nav>
-      </div>
-    </>
+    </div>
   )
 }
