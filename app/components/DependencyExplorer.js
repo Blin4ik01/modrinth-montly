@@ -694,6 +694,7 @@ export default function DependencyExplorer({
   defaultOpen = false,
   hideTrigger = false,
   onClose,
+  overlayClassName = '',
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [portalTarget, setPortalTarget] = useState(null)
@@ -719,7 +720,7 @@ export default function DependencyExplorer({
   const modal = isOpen && portalTarget
     ? createPortal(
         <div
-          className="dependency-explorer-overlay fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+          className={`dependency-explorer-overlay fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm ${overlayClassName}`}
           onClick={closeModal}
         >
           <div

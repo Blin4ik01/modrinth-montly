@@ -7,7 +7,6 @@ import { compressSidebarGameVersions } from '@/lib/minecraftVersionSort'
 import CompressedGameVersionsChips from './CompressedGameVersionsChips'
 import CopyButton from './CopyButton'
 import CopyLabeledButton from './CopyLabeledButton'
-import ResourceDependenciesSection from './ResourceDependenciesSection'
 import GitHubSidebarSection from './GitHubSidebarSection'
 import { parseGitHubRepoFromSourceUrl } from '@/lib/github'
 import LicenseLink from './LicenseLink'
@@ -98,14 +97,6 @@ export default function ResourceSidebar({ resource, teamMembers = [], contentTyp
             )}
           </div>
         </div>
-      )}
-
-      {resource.slug && (
-        <ResourceDependenciesSection
-          projectSlug={resource.slug}
-          projectTitle={resource.title}
-          projectId={resource.id ?? resource.project_id}
-        />
       )}
 
       {resource.project_type === 'minecraft_java_server' && (
