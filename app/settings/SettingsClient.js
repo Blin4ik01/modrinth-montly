@@ -154,7 +154,7 @@ export default function SettingsClient() {
           <button
             onClick={() => setTheme('system')}
             className={`preview-radio ${theme === 'system' ? 'selected' : ''}`}
-            aria-label="Синхронизация с системой"
+            aria-label="Системная (Авто) тема"
           >
             <div className="preview system-mode">
               <div className="example-card">
@@ -174,7 +174,7 @@ export default function SettingsClient() {
                   <circle cx="12" cy="12" r="10" />
                 )}
               </svg>
-              Система
+              Системная (Авто)
             </div>
           </button>
 
