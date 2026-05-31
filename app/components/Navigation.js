@@ -20,7 +20,7 @@ export default function Navigation() {
     if (path.startsWith('/discover/shaders') || path.startsWith('/shaders') || path.startsWith('/shader/')) return 'cyan'
     if (path.startsWith('/discover/modpacks') || path.startsWith('/modpacks') || path.startsWith('/modpack/')) return 'red'
     if (path.startsWith('/discover/plugins') || path.startsWith('/plugins') || path.startsWith('/plugin/')) return 'blue'
-    if (path.startsWith('/discover/servers') || path.startsWith('/servers') || path.startsWith('/server/')) return 'emerald'
+    if (path.startsWith('/discover/servers') || path.startsWith('/servers') || path.startsWith('/server/')) return 'server'
     if (path.startsWith('/app') || path.startsWith('/launcher')) return 'emerald'
     if (path.startsWith('/news')) return 'yellow'
     return 'modrinth-green'
@@ -108,7 +108,8 @@ export default function Navigation() {
       'red': 'from-red-500/10 to-rose-500/10',
       'blue': 'from-blue-500/10 to-cyan-500/10',
       'yellow': 'from-yellow-500/10 to-amber-500/10',
-      'emerald': 'from-emerald-500/10 to-teal-500/10'
+      'emerald': 'from-emerald-500/10 to-teal-500/10',
+      server: 'from-indigo-500/10 to-violet-500/10',
     }
     return gradients[color] || gradients['modrinth-green']
   }
@@ -209,8 +210,8 @@ export default function Navigation() {
       <Link 
         ref={el => linksRef.current['/discover/servers'] = el}
         href="/discover/servers" 
-        className="group relative px-2.5 md:px-4 py-2 rounded-lg transition-all duration-300 whitespace-nowrap z-10 hover:bg-emerald-500/10 dark:hover:bg-emerald-950/30 hover:bg-emerald-200/30 dark:hover:bg-emerald-950/30">
-        <span className={`text-xs md:text-sm font-semibold transition-colors flex items-center gap-1.5 ${isActive('/discover/servers') || isActive('/servers') ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400'}`}>
+        className="group relative px-2.5 md:px-4 py-2 rounded-lg transition-all duration-300 whitespace-nowrap z-10 hover:bg-indigo-500/10 dark:hover:bg-indigo-950/30 hover:bg-indigo-200/30 dark:hover:bg-indigo-950/30">
+        <span className={`text-xs md:text-sm font-semibold transition-colors flex items-center gap-1.5 ${isActive('/discover/servers') || isActive('/servers') ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'}`}>
           <svg className="hidden sm:inline w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
             <line x1="22" x2="2" y1="12" y2="12" />
             <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />

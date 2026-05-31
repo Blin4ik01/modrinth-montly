@@ -4,6 +4,7 @@ import { filterAvatar } from '@/lib/contentFilter'
 import { CATEGORIES } from '@/lib/categories'
 import { RESOURCEPACK_CATEGORIES } from '@/lib/resourcepackCategories'
 import { SHADER_STYLES, SHADER_FEATURES, SHADER_PERFORMANCE } from '@/lib/shaderCategories'
+import { IconModrinthAppPlays } from '@/lib/icons'
 import DownloadModal from './DownloadModal'
 import MobileDownloadButton from './MobileDownloadButton'
 import MinePluginCheckPromo, { DownloadPromoConnector } from './MinePluginCheckPromo'
@@ -140,16 +141,13 @@ export default function ResourceHeader({ resource, contentType, versions = [] })
                     )}
                     {(plays2w != null || plays4w != null) && (
                       <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 bg-gray-800/40 border border-gray-700/35 px-2.5 py-1 rounded-full text-xs md:text-sm">
-                        <svg className="w-5 h-5 text-gray-500 shrink-0 relative -translate-y-[2px]" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-                          <path d="M4.5 16.5c-1.5 1.25-2.5 3.5-2.5 3.5s2.25-1 3.5-2.5M14 8.5c.07-.07.14-.15.22-.22a6.5 6.5 0 1 0-9.19 9.19c.07-.07.15-.14.22-.22M18.5 5.5c1.5-1.25 2.5-3.5 2.5-3.5s-2.25 1-3.5 2.5M11.5 12.5 17 7M9.5 14.5l-5.5 5.5" />
-                        </svg>
                         <div className="flex items-center">
                           <StyledTooltip label={`${(plays2w || 0).toLocaleString('ru-RU')} запусков через Modrinth App за последние 2 недели`}>
                             <span className="font-semibold text-gray-900 dark:text-white cursor-help hover:text-modrinth-green transition-colors">
                               {(plays2w || 0).toLocaleString('ru-RU')}
                             </span>
                           </StyledTooltip>
-                          <span className="text-gray-500 mx-1.5 select-none">|</span>
+                          <IconModrinthAppPlays className="w-4 h-4 text-gray-500 shrink-0 mx-1.5 -translate-y-0.5" aria-hidden />
                           <StyledTooltip label={`${(plays4w || 0).toLocaleString('ru-RU')} запусков через Modrinth App за последний месяц`}>
                             <span className="font-semibold text-gray-900 dark:text-white cursor-help hover:text-modrinth-green transition-colors">
                               {(plays4w || 0).toLocaleString('ru-RU')}

@@ -5,6 +5,7 @@ import { LOADERS } from '@/lib/loaders'
 import { RESOURCEPACK_CATEGORIES } from '@/lib/resourcepackCategories'
 import { SHADER_STYLES, SHADER_FEATURES, SHADER_PERFORMANCE } from '@/lib/shaderCategories'
 import { SERVER_CATEGORIES, SERVER_REGIONS } from '@/lib/serverCategories'
+import { IconModrinthAppPlays } from '@/lib/icons'
 import RelativeTime from './RelativeTime'
 
 function uniqueStrings(list) {
@@ -288,9 +289,7 @@ export default function ResourceCard({ resource, type = 'mod', forceLayout = nul
 
             {(plays2w !== null || plays4w !== null) && (
               <div className="flex items-center gap-1.5 text-gray-400">
-                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                  <path d="m5 3 14 9-14 9z"/>
-                </svg>
+                <IconModrinthAppPlays className="w-5 h-5 shrink-0 text-gray-400 -rotate-45" />
                 <div className="flex flex-col gap-0.5">
                   {plays2w !== null && (
                     <span className="text-sm leading-tight">
