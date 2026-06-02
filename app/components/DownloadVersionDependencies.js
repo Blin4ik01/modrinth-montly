@@ -167,7 +167,7 @@ export default function DownloadVersionDependencies({
           )}
         </div>
         {items.length > 0 && (
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 max-h-[min(320px,40vh)] overflow-y-auto overscroll-contain pr-1 custom-scrollbar">
             {items.map((item) => (
               <a
                 key={`${item.projectId || item.versionId}:${item.filename}`}

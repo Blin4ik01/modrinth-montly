@@ -499,7 +499,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
           onClick={() => setIsOpen(false)}
         >
           <div 
-            className="bg-white dark:bg-modrinth-dark text-gray-900 dark:text-white rounded-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl animate-fade-in-up transform"
+            className="bg-white dark:bg-modrinth-dark text-gray-900 dark:text-white rounded-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl animate-fade-in-up transform flex flex-col"
             style={{ maxWidth: '550px', animationDelay: '0ms' }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -537,7 +537,7 @@ export default function DownloadModal({ mod, versions, contentType = 'mods' }) {
               </div>
             </div>
 
-            <div className="p-5 space-y-4">
+            <div className="p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain custom-scrollbar touch-pan-y">
               {showAppSection && (
                 <>
                   <div className="flex flex-col items-center w-full">
